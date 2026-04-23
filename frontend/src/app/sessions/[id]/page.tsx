@@ -35,6 +35,34 @@ export default async function SessionDetailPage({
   const { id } = await params;
   const detail = await getSessionDetail(id);
 
+  if (!detail) {
+    return (
+      <main className="min-h-screen bg-[#f4f4f4]">
+        <TopNav />
+
+        <div className="mx-auto max-w-[1280px] px-8 py-6 xl:px-10">
+          <div className="mb-5">
+            <Link
+              href="/"
+              className="text-[14px] text-neutral-500 transition hover:text-black"
+            >
+              ← Back
+            </Link>
+          </div>
+
+          <div className="rounded-[24px] border border-neutral-200 bg-white p-8 text-center">
+            <h1 className="font-display text-[28px] font-bold text-neutral-900">
+              No results available
+            </h1>
+            <p className="mt-3 text-[15px] text-neutral-500">
+              Session detail data is not available right now.
+            </p>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="min-h-screen bg-[#f4f4f4]">
       <TopNav />
@@ -60,7 +88,8 @@ export default async function SessionDetailPage({
           </div>
 
           <h1 className="font-display max-w-[900px] text-[42px] font-bold leading-[1.05] text-neutral-900">
-            {detail.event.seriesName.toUpperCase()} {detail.event.eventName.toUpperCase()} ·{' '}
+            {detail.event.seriesName.toUpperCase()}{' '}
+            {detail.event.eventName.toUpperCase()} ·{' '}
             {detail.session.name.toUpperCase()}
           </h1>
 
@@ -68,7 +97,9 @@ export default async function SessionDetailPage({
             <div className="font-semibold text-neutral-700">
               {formatWeekendRange(detail.event.dateStart, detail.event.dateEnd)}
             </div>
-            <div className="mt-1">{detail.event.venueName}, {detail.event.location}</div>
+            <div className="mt-1">
+              {detail.event.venueName}, {detail.event.location}
+            </div>
           </div>
         </div>
 
