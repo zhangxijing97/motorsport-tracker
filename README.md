@@ -226,18 +226,22 @@ That gap is likely the strongest foundation for this project.
 ## Run Project
 
 ### Backend
+```
 cd backend
 npm install
 npm run start:dev
+```
 
 Runs on: http://localhost:3001
 
 ---
 
 ### Frontend
+```
 cd frontend
 npm install
 npm run dev
+```
 
 Runs on: http://localhost:3000
 
