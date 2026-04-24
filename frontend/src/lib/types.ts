@@ -35,10 +35,18 @@ export type MatchItem = {
   centerSecondary?: string;
 };
 
+// export type CompetitionGroup = {
+//   id: string;
+//   name: string;
+//   icon: string;
+//   matches: MatchItem[];
+// };
+
 export type CompetitionGroup = {
   id: string;
   name: string;
   icon: string;
+  // seriesId: string;
   matches: MatchItem[];
 };
 
