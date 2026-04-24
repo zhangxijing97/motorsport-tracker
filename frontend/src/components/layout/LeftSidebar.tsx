@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import SectionCard from '../common/SectionCard';
 import { topSeries } from '../../lib/mock-data';
 
@@ -18,9 +19,15 @@ export default function LeftSidebar() {
               rel="noopener noreferrer"
               className="flex items-center gap-3 rounded-lg px-1 py-1 transition hover:bg-neutral-50"
             >
-              <div className="flex h-6 w-6 items-center justify-center text-[15px]">
-                {item.icon}
+              <div className="relative h-6 w-6 overflow-hidden rounded-sm">
+                <Image
+                  src={item.logo}
+                  alt={`${item.name} logo`}
+                  fill
+                  className="object-contain"
+                />
               </div>
+
               <span className="font-display text-[15px] font-medium text-neutral-800">
                 {item.name}
               </span>

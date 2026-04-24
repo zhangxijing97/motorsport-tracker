@@ -1,4 +1,4 @@
-// export type MatchStatus = 'finished' | 'live' | 'upcoming';
+export type MatchStatus = 'finished' | 'live' | 'upcoming';
 
 // export type TopCompetition = {
 //   id: string;
@@ -7,44 +7,10 @@
 //   officialUrl: string;
 // };
 
-// export type NewsItem = {
-//   id: string;
-//   title: string;
-//   source: string;
-//   timeAgo: string;
-//   image: string;
-// };
-
-// export type MatchItem = {
-//   id: string;
-//   homeName: string;
-//   awayName: string;
-
-//   homeScore?: number;
-//   awayScore?: number;
-
-//   aggregate?: string;
-
-//   minuteOrTime: string;
-//   status: MatchStatus;
-
-//   centerPrimary?: string;
-//   centerSecondary?: string;
-// };
-
-// export type CompetitionGroup = {
-//   id: string;
-//   name: string;
-//   icon: string;
-//   matches: MatchItem[];
-// };
-
-export type MatchStatus = 'finished' | 'live' | 'upcoming';
-
 export type TopCompetition = {
   id: string;
   name: string;
-  icon: string;
+  logo: string;
   officialUrl: string;
 };
 
