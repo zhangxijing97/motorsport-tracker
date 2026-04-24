@@ -250,3 +250,31 @@ Runs on: http://localhost:3000
 ## Notes
 - Start backend first
 - Frontend calls backend API
+
+
+## Deployment
+
+### Frontend (Netlify)
+- URL: https://motorsporttracker.netlify.app
+
+### Backend (Render)
+- URL: https://motorsport-tracker-backend.onrender.com
+
+## How it works
+
+Frontend (Netlify) calls Backend (Render), which fetches data from OpenF1 API.
+
+## Quick Test Endpoints
+
+### Backend API
+
+- Get today's events:
+  https://motorsport-tracker-backend.onrender.com/events/today
+
+- Get session detail:
+  https://motorsport-tracker-backend.onrender.com/sessions/openf1-session-9134/detail
+
+## Notes
+
+- Render free tier may be slow on first request (cold start).
+- Frontend uses environment variable:
