@@ -27,7 +27,6 @@ export class SportradarProvider implements RacingDataProvider {
     'formula-e',
     'indycar',
     'indy-nxt',
-    'nascar',
     'motogp',
     'rally',
   ];
