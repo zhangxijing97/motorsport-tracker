@@ -180,45 +180,6 @@ That gap is likely the strongest foundation for this project.
 │  - sessions          │
 └──────────────────────┘
 
-# Planned Expanded
-┌──────────────────────┐
-│      User Browser    │
-└──────────┬───────────┘
-           │
-           ▼
-┌──────────────────────┐
-│   Next.js Frontend   │
-│  - UI                │
-│  - auth state        │
-│  - routing           │
-└──────────┬───────────┘
-           │
-           ▼
-┌────────────────────────────────────┐
-│           NestJS Backend           │
-│  - API routes                      │
-│  - external API services           │
-│  - normalization layer             │
-│  - auth-protected endpoints        │
-│  - aggregation / filtering         │
-└───────┬───────────────┬────────────┘
-        │               │
-        ▼               ▼
-┌───────────────┐   ┌───────────────┐
-│ PostgreSQL    │   │ Redis         │
-│ - users       │   │ - live cache  │
-│ - follows     │   │ - fast reads  │
-│ - preferences │   │ - temp state  │
-│ - stored meta │   └───────────────┘
-└───────┬───────┘
-        │
-        ▼
-┌────────────────────────────────────┐
-│ External Data Sources              │
-│ - OpenF1                           │
-│ - future APIs for other series     │
-└────────────────────────────────────┘
-
 # Question
 1. Deployment Platform
 2. Cache

@@ -70,7 +70,7 @@ export default function CompetitionSection({
       <div className="flex items-center justify-between bg-neutral-50 px-5 py-5">
         <div className="flex min-w-0 items-center">
           <div className="min-w-0">
-            <h3 className="max-w-[520px] truncate text-[20px] font-semibold tracking-tight text-neutral-900">
+            <h3 className="max-w-[520px] truncate text-[16px] font-semibold tracking-tight text-neutral-900">
               {group.seriesName} · {group.name}
             </h3>
           </div>
