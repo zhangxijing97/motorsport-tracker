@@ -1,22 +1,11 @@
-// import { NestFactory } from '@nestjs/core';
-// import { AppModule } from './app.module';
-
-// async function bootstrap() {
-//   const app = await NestFactory.create(AppModule);
-
-//   app.enableCors({
-//     origin: 'http://localhost:3000',
-//   });
-
-//   await app.listen(3001);
-// }
-// bootstrap();
+// bootstrap the app (create server + start listening)
 
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  // create the app using AppModule
 
   app.enableCors({
     origin: [
@@ -24,9 +13,12 @@ async function bootstrap() {
       'https://motorsporttracker.netlify.app',
     ],
   });
+  // allow requests from these frontends only (browser)
 
   const port = process.env.PORT ?? 3001;
   await app.listen(port);
+  // start server
 }
 
 bootstrap();
+// run app
