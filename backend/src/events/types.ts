@@ -39,17 +39,14 @@ export interface Event {
   id: string;
   series: Series;
   season: Season;
-
   eventName: string;
   roundNumber?: number;
   roundLabel?: string;
-
   country: string;
   location: string;
   venueName: string;
   dateStart: string;
   dateEnd: string;
-
   sessions: Session[];
 }
 
@@ -62,4 +59,20 @@ export interface SessionClassificationRow {
   bestLapTime?: string | null;
   gapToLeader?: string | null;
   laps: number;
+}
+
+export interface SessionDetail {
+  event: {
+    id: string;
+    eventName: string;
+    seriesName: string;
+    seasonName: string;
+    country: string;
+    location: string;
+    venueName: string;
+    dateStart: string;
+    dateEnd: string;
+  };
+  session: Session;
+  classification: SessionClassificationRow[];
 }
