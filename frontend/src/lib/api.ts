@@ -97,6 +97,7 @@ function mapEventToGroup(event: BackendEvent): CompetitionGroup {
   return {
     id: event.id,
     name: event.eventName,
+    seriesName: event.series.name,
     icon: getSeriesIcon(event.series.id),
     matches: event.sessions.map((session) => mapSessionToMatch(event, session)),
   };

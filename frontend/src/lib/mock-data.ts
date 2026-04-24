@@ -128,45 +128,45 @@ export const newsItems = [
   },
 ];
 
-export const competitionGroups: CompetitionGroup[] = [
-  {
-    id: 'f1-today',
-    name: 'Formula 1',
-    icon: '🏎️',
-    matches: [
-      {
-        id: 'f1-race',
-        homeName: 'George Russell',
-        awayName: 'Mercedes',
-        homeScore: 58,
-        awayScore: undefined,
-        aggregate: '1:23:06.801',
-        minuteOrTime: 'FT',
-        status: 'finished',
-        centerPrimary: 'Round 8',
-        centerSecondary: 'Formula 1',
-      },
-      {
-        id: 'f1-live',
-        homeName: 'Max Verstappen',
-        awayName: 'Red Bull',
-        homeScore: 22,
-        awayScore: undefined,
-        aggregate: 'Lap 31 / 58',
-        minuteOrTime: '31',
-        status: 'live',
-        centerPrimary: 'Round 8',
-        centerSecondary: 'Formula 1',
-      },
-      {
-        id: 'f1-upcoming',
-        homeName: 'Sprint Qualifying',
-        awayName: 'Spa-Francorchamps',
-        minuteOrTime: '15:00',
-        status: 'upcoming',
-        centerPrimary: 'Round 8',
-        centerSecondary: 'Formula 1',
-      },
-    ],
-  },
-];
+// export const competitionGroups: CompetitionGroup[] = [
+//   {
+//     id: 'f1-today',
+//     name: 'Formula 1',
+//     icon: '🏎️',
+//     matches: [
+//       {
+//         id: 'f1-race',
+//         homeName: 'George Russell',
+//         awayName: 'Mercedes',
+//         homeScore: 58,
+//         awayScore: undefined,
+//         aggregate: '1:23:06.801',
+//         minuteOrTime: 'FT',
+//         status: 'finished',
+//         centerPrimary: 'Round 8',
+//         centerSecondary: 'Formula 1',
+//       },
+//       {
+//         id: 'f1-live',
+//         homeName: 'Max Verstappen',
+//         awayName: 'Red Bull',
+//         homeScore: 22,
+//         awayScore: undefined,
+//         aggregate: 'Lap 31 / 58',
+//         minuteOrTime: '31',
+//         status: 'live',
+//         centerPrimary: 'Round 8',
+//         centerSecondary: 'Formula 1',
+//       },
+//       {
+//         id: 'f1-upcoming',
+//         homeName: 'Sprint Qualifying',
+//         awayName: 'Spa-Francorchamps',
+//         minuteOrTime: '15:00',
+//         status: 'upcoming',
+//         centerPrimary: 'Round 8',
+//         centerSecondary: 'Formula 1',
+//       },
+//     ],
+//   },
+// ];

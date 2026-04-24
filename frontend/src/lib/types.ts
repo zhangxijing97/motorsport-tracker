@@ -42,11 +42,19 @@ export type MatchItem = {
 //   matches: MatchItem[];
 // };
 
+// export type CompetitionGroup = {
+//   id: string;
+//   name: string;
+//   icon: string;
+//   // seriesId: string;
+//   matches: MatchItem[];
+// };
+
 export type CompetitionGroup = {
   id: string;
   name: string;
+  seriesName: string;
   icon: string;
-  // seriesId: string;
   matches: MatchItem[];
 };
 
