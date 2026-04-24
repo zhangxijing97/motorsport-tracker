@@ -1,36 +1,3 @@
-// import { Controller, Get, Param, Query } from '@nestjs/common';
-// import { EventsService } from './events.service';
-
-// @Controller('events')
-// export class EventsController {
-//   constructor(private readonly eventsService: EventsService) {}
-
-//   @Get('today')
-//   getTodayEvents(@Query('date') date?: string) {
-//     return this.eventsService.getEventsByDate(date);
-//   }
-
-//   @Get('upcoming')
-//   getUpcomingEvents(@Query('date') date?: string) {
-//     return this.eventsService.getUpcomingEvents(date);
-//   }
-
-//   @Get('live')
-//   getLiveEvents(@Query('date') date?: string) {
-//     return this.eventsService.getLiveEvents(date);
-//   }
-
-//   @Get('past')
-//   getPastEvents(@Query('date') date?: string) {
-//     return this.eventsService.getPastEvents(date);
-//   }
-
-//   @Get(':id')
-//   getEventById(@Param('id') id: string) {
-//     return this.eventsService.getEventById(id);
-//   }
-// }
-
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { EventsService } from './events.service';
 
