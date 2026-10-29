@@ -1,116 +1,130 @@
-## Core Components & Request Flow
+# OpenGP — Architecture
 
-OpenGP uses a modular NestJS architecture to retrieve motorsport data from external APIs and return it in a consistent format.
+> **Purpose:** A concise guide to OpenGP's system structure, request flow, and engineering principles.
+>
+> **Current** describes the existing code; **Proposed** describes planned architecture, not implemented functionality.
+>
+> **Reviewed:** 2026-10-28 · [Repository](https://github.com/zhangxijing97/motorsport-tracker)
+
+## 1. System & Backend Overview (Current)
+
+OpenGP is an Automotive Discovery Platform, initially focused on multi-series motorsport tracking.
+
+- **Frontend:** Next.js, React, and TypeScript; renders schedules, events, and session details.
+- **Backend:** NestJS and TypeScript; exposes OpenGP JSON endpoints and integrates external motorsport data.
+- **Provider integrations:** The codebase contains OpenF1, Sportradar, and NASCAR adapters. Their presence does not imply complete or verified coverage.
+
+### Key Files
+
+```text
+backend/src/
+├── main.ts                         # Application bootstrap and CORS
+├── app.module.ts                   # Root module and configuration
+├── events/
+│   ├── events.module.ts            # Events module registration
+│   ├── events.controller.ts        # HTTP routes
+│   ├── events.service.ts           # Request orchestration
+│   └── types.ts                    # Current shared API types
+├── data-providers/
+│   ├── data-providers.module.ts     # Provider registration
+│   ├── racing-data-provider.interface.ts
+│   ├── racing-data-provider.registry.ts
+│   ├── openf1/                     # Client, Mapper, Provider
+│   ├── sportradar/                 # Client, Mapper, Provider
+│   └── nascar/                     # Client, Mapper, Provider
+└── common/cache.util.ts           # In-memory TTL cache helpers
+
+frontend/src/lib/api.ts             # Backend API consumption and UI mapping
+```
+
+## 2. Core Components & Request Flow (Current)
 
 ### Request Flow
 
 ```text
-HTTP Request
+HTTP Request (Frontend)
     ↓
-EventsController
-Receives requests and extracts parameters
+EventsController                Receives requests and parameters
     ↓
-EventsService
-Selects and coordinates data providers
+EventsService                   Coordinates data retrieval
     ↓
-RacingDataProviderRegistry
-Resolves the appropriate provider for a racing series
+RacingDataProviderRegistry      Selects a provider by series
     ↓
-OpenF1Provider (example)
-Manages F1-specific data retrieval and processing
-    ├── OpenF1Client
-    │   Fetches raw data from the OpenF1 API
-    └── OpenF1Mapper
-        Converts raw data into OpenGP's shared models
+OpenF1Provider (example)        Implements the racing data interface
+    ├── OpenF1Client             Fetches external API data
+    └── OpenF1Mapper             Maps data to OpenGP types
     ↓
 EventsService → EventsController
     ↓
-HTTP Response (JSON)
+HTTP Response (JSON) → Frontend
 ```
 
 ### Component Responsibilities
 
 | Component | Responsibility |
-|---|---|
-| **Module** | Organizes and registers related components and dependencies. |
-| **Controller** | Handles HTTP requests, extracts parameters, and returns responses. |
-| **Service** | Coordinates business logic and data providers. |
-| **Registry** | Resolves the appropriate racing data provider based on the series. |
-| **Racing Data Provider** | Handles series-specific data retrieval, filtering, and processing. |
-| **Client** | Communicates with external APIs, including HTTP requests, retries, and caching. |
-| **Mapper** | Transforms external API data into OpenGP's standardized data models. |
+| --- | --- |
+| **Module** | Registers related controllers, providers, and imported dependencies. |
+| **Controller** | Defines HTTP routes, reads parameters, and delegates work. |
+| **Service** | Coordinates application logic and provider calls. |
+| **Registry** | Resolves the racing data provider for a series. |
+| **Racing Data Provider** | Implements OpenGP's shared data-access interface for a supported series. |
+| **Client** | Communicates with an external API; handles provider-specific HTTP behavior. |
+| **Mapper** | Converts external data fields and semantics into OpenGP types. |
 
-**Design Principle:** The frontend consumes OpenGP's standardized API responses instead of depending directly on external data providers. This allows data sources to be replaced or extended with minimal impact on the frontend.
+**Current behavior and limitations:**
 
-### Simple NestJS Example
+- The Registry selects the **first** provider supporting a series; capability-based routing is not implemented.
+- Queries without a specified series aggregate calls with `Promise.allSettled`; provider failures may be indistinguishable from empty results.
+- Cache utilities use in-process memory and TTLs. Persistent ingestion and a canonical data store are not implemented.
+- Some existing result mappings require correction; in particular, fastest-lap rankings must not be presented as official race classifications.
 
-The following simplified example demonstrates how a Module, Controller, Service, and Provider work together.
+## 3. Racing Data Architecture (Proposed)
 
-**Goal:** A request to `GET /hello` returns `"Hello OpenGP!"`.
+**Goal:** OpenGP owns its data semantics. External providers adapt to OpenGP rather than defining its public API.
 
-**1. Module — Registers components**
+- **Canonical Data Model:** Represent motorsport data consistently across series, including different race formats and result types.
+- **Capability-based routing:** Assign a provider by **series + capability** (e.g., calendar, session results, standings), with explicit ownership.
+- **Stable identity:** Separate OpenGP entity IDs from external provider IDs, retaining mappings when sources change.
+- **Provenance and availability:** Track source, retrieval time, publication status, and whether data is available, incomplete, unpublished, or unavailable due to errors.
+- **Scheduled ingestion:** Where permitted, validate and persist upstream data independently of frontend requests; serve stable snapshots to users.
+
+For entity relationships, fields, and API responses, see [`api-contract.md`](./api-contract.md). For provider selection, external endpoints, and field mappings, see [`data-providers.md`](./data-providers.md).
+
+## 4. Engineering Principles
+
+1. **Correctness before coverage:** Never infer official race classification from fastest laps or live positions.
+2. **No fabricated values:** Do not invent missing times, positions, points, or statuses; preserve meaningful `null`/unknown states.
+3. **Explicit failure semantics:** Distinguish unsupported features, unpublished results, legitimate empty data, and upstream failures.
+4. **Provider independence:** The frontend depends on OpenGP API contracts, not external provider payloads.
+5. **Incremental evolution:** Validate the design against real F1 data first, then expand to other series. Do not present proposed features as implemented.
+
+## 5. NestJS Fundamentals (Learning Notes)
+
+| Concept | What it does | OpenGP example |
+| --- | --- | --- |
+| **Module** | Groups and registers application dependencies. | `AppModule`, `EventsModule`, `DataProvidersModule` |
+| **Controller** | Handles incoming HTTP requests. | `EventsController` |
+| **Service** | Executes and coordinates application logic. | `EventsService` |
+| **Dependency Injection (DI)** | Lets NestJS supply registered dependencies to classes. | Injecting `RacingDataProviderRegistry` into `EventsService` |
+| **NestJS Provider** | A class or value managed by NestJS's DI container. | `EventsService`, `OpenF1Client` |
+
+### Example: Dependency Registration and Injection
+
+`AppModule` imports `EventsModule`, which imports `DataProvidersModule`. The latter exports `RacingDataProviderRegistry`, making it injectable into `EventsService`.
 
 ```typescript
+// events.module.ts (simplified from the current implementation)
 @Module({
-  controllers: [HelloController],
-  providers: [HelloService],
+  imports: [DataProvidersModule],
+  controllers: [EventsController],
+  providers: [EventsService],
 })
-export class HelloModule {}
+export class EventsModule {}
+
+// events.service.ts (constructor excerpt)
+constructor(private readonly providerRegistry: RacingDataProviderRegistry) {}
 ```
 
-**2. Controller — Handles the HTTP request**
+**Lifecycle:** Modules register dependencies during application initialization; they are not re-executed for each HTTP request. Controller route handlers run when requests arrive.
 
-```typescript
-@Controller()
-export class HelloController {
-  constructor(private readonly service: HelloService) {}
-
-  @Get('hello')
-  getHello() {
-    return this.service.sayHello();
-  }
-}
-```
-
-**3. Service — Executes business logic**
-
-```typescript
-@Injectable()
-export class HelloService {
-  sayHello() {
-    return 'Hello OpenGP!';
-  }
-}
-```
-
-**4. Provider — Supplies dependencies**
-
-`HelloService` is also a NestJS Provider. By registering it in the Module's `providers` array, NestJS can automatically create and inject it into `HelloController`.
-
-**Execution Flow:**
-
-```text
-Application Startup
-    ↓
-HelloModule
-Registers HelloController and HelloService
-    ↓
-GET /hello
-    ↓
-HelloController.getHello()
-    ↓
-HelloService.sayHello()
-    ↓
-HTTP Response: "Hello OpenGP!"
-```
-
-The Module registers dependencies during application initialization; it does not execute for every HTTP request.
-
-**Key Takeaway:**
-
-- **Module:** Organizes components.
-- **Controller:** Handles requests and responses.
-- **Service:** Executes business logic.
-- **NestJS Provider:** A managed, injectable dependency; services are commonly providers.
-
-In OpenGP, `OpenF1Provider` is both a NestJS Provider and a racing-specific data provider. These are two different meanings of the word *Provider*.
+**Two meanings of “Provider”:** A *NestJS Provider* is a DI concept. An OpenGP *Racing Data Provider* is an application-specific data adapter. `OpenF1Provider` serves both roles.
