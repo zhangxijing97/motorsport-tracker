@@ -241,27 +241,38 @@ HTTP Response: "Hello OpenGP!"
 
 ### 5.3 Dependency Injection & Module Imports/Exports
 
-**Why can one service use a provider from another module?** NestJS connects dependencies through module registrations.
+**Why it matters:** `EventsService` needs to use `RacingDataProviderRegistry`, even though they belong to different modules.
+
+**Dependency Injection (DI)** means NestJS creates and supplies the objects a class needs. You do not have to create them manually with `new`.
 
 ```text
 DataProvidersModule
-    └── exports RacingDataProviderRegistry
-                    ↓
-EventsModule imports DataProvidersModule
-    └── EventsService receives the Registry via its constructor
+    providers → registers RacingDataProviderRegistry
+    exports   → makes the Registry available to other modules
+                     ↓
+EventsModule
+    imports   → gains access to DataProvidersModule's exports
+                     ↓
+EventsService
+    constructor → receives RacingDataProviderRegistry
 ```
 
-- **`providers`:** Register dependencies inside a module.
-- **`exports`:** Make selected dependencies available to other modules.
-- **`imports`:** Access dependencies exported by another module.
-- **Constructor injection:** Request a dependency as a constructor parameter; NestJS supplies it automatically.
+- **`providers`:** Tell NestJS what objects this module provides.
+- **`exports`:** Allow other modules to use selected providers.
+- **`imports`:** Bring another module's exported providers into this module.
+- **Constructor injection:** Ask for a provider in the constructor; NestJS passes it in.
+
+```typescript
+// From EventsService (constructor excerpt)
+constructor(private readonly providerRegistry: RacingDataProviderRegistry) {}
+```
 
 ### 5.4 Decorators & HTTP Request Handling
 
-Decorators connect HTTP requests to controller methods and extract request values.
+**Why it matters:** Decorators tell NestJS which controller method should handle a request and how to read its inputs.
 
 ```typescript
-// Simplified from OpenGP's EventsController
+// Simplified from the current EventsController
 @Controller()
 export class EventsController {
   @Get('events/:id')
@@ -273,16 +284,20 @@ export class EventsController {
 
 For `GET /events/123?series=f1`:
 
-- **`@Controller()`** marks the class as a controller.
-- **`@Get('events/:id')`** handles matching GET requests.
-- **`@Param('id')`** reads `123` from the URL path.
-- **`@Query('series')`** reads `f1` from the query string.
+| Decorator | What it does |
+| --- | --- |
+| `@Controller()` | Marks the class as an HTTP controller. |
+| `@Get('events/:id')` | Runs this method for a matching GET request. |
+| `@Param('id')` | Reads `123` from the URL path. |
+| `@Query('series')` | Reads `f1` from the query string. |
 
-*Constructor and imports are omitted for clarity.*
+*The constructor and imports are omitted from this example.*
 
 ### 5.5 DTOs & Validation
 
-A **DTO (Data Transfer Object)** describes expected request data. A **ValidationPipe** checks incoming values before application logic runs.
+**Why it matters:** Users can send invalid values, so the backend should check requests before using them.
+
+A **DTO (Data Transfer Object)** describes what input is expected. A **ValidationPipe** checks that input.
 
 ```typescript
 // Teaching example; not currently configured in OpenGP
@@ -293,19 +308,25 @@ export class EventsQueryDto {
 }
 ```
 
-A controller can receive it as `@Query() query: EventsQueryDto`. Install `class-validator` and `class-transformer`, then enable `ValidationPipe` to enforce the rules. An invalid date can then produce **HTTP 400**.
+- `@IsOptional()` means `date` is not required.
+- `@IsDateString()` means a provided date must use a valid date string.
+- A controller can use `@Query() query: EventsQueryDto` to receive these values.
 
-**Remember:** TypeScript types alone do not validate HTTP requests at runtime.
+For example, `?date=2026-10-29` is valid; `?date=hello` should produce **HTTP 400** after validation is enabled.
+
+**Remember:** DTO types do not validate requests by themselves. Install `class-validator` and `class-transformer`, and enable `ValidationPipe` (for example, in `main.ts`).
 
 ### 5.6 Exception Handling
 
-NestJS converts exceptions into HTTP error responses.
+**Why it matters:** When something fails, the frontend needs to know what went wrong and whether the request can be fixed.
 
-| Status | Meaning | Common NestJS mechanism |
+NestJS turns exceptions into HTTP error responses:
+
+| Status | Meaning | Example |
 | --- | --- | --- |
-| **400 Bad Request** | Invalid request data | `ValidationPipe` or `BadRequestException` |
-| **404 Not Found** | Resource not found | `NotFoundException` |
-| **500 Internal Server Error** | Unexpected server failure | Unhandled exception; do not expose internal details |
+| **400 Bad Request** | The request contains invalid input. | Invalid date; `ValidationPipe` or `BadRequestException`. |
+| **404 Not Found** | The requested resource does not exist. | `NotFoundException`. |
+| **500 Internal Server Error** | Something unexpected failed on the server. | An unhandled exception. |
 
 ```typescript
 if (!event) {
@@ -313,7 +334,7 @@ if (!event) {
 }
 ```
 
-**OpenGP rule:** An upstream API failure is not the same as an empty race calendar.
+**OpenGP rule:** An external API failure does **not** mean there are no events. Handle provider errors separately from valid empty results, and avoid exposing internal details in error messages.
 
 ---
 
