@@ -2,7 +2,7 @@
 
 > **Purpose:** A quick guide to OpenGP's external motorsport data integrations and how providers will be selected.  
 > **Status:** **Current** = code exists in the repository; **Pending Validation** = no final data provider has been selected.  
-> **Reviewed:** 2026-10-29 · [GitHub repository](https://github.com/zhangxijing97/motorsport-tracker)
+> **Reviewed:** 2026-10-29 · [GitHub repository](https://github.com/zhangxijing97/opengp)
 
 ## Table of Contents
 

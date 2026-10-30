@@ -2,7 +2,7 @@
 
 > **Purpose:** A quick reference for OpenGP's HTTP API and racing data model.  
 > **Status:** **Current** = defined in the repository; **Proposed** = a design for future implementation, not an approved or live API.  
-> **Reviewed:** 2026-10-29 · [GitHub repository](https://github.com/zhangxijing97/motorsport-tracker)
+> **Reviewed:** 2026-10-29 · [GitHub repository](https://github.com/zhangxijing97/opengp)
 
 ## Table of Contents
 

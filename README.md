@@ -19,7 +19,7 @@ The backend currently contains OpenF1, Sportradar, and NASCAR adapters. **No fin
 ## 2. Project Structure
 
 ```text
-motorsport-tracker/
+opengp/
 ├── frontend/             # Next.js web application
 ├── backend/              # NestJS API application
 ├── docs/
@@ -39,8 +39,8 @@ The frontend calls the OpenGP backend; the backend retrieves and normalizes data
 Clone the repository:
 
 ```bash
-git clone https://github.com/zhangxijing97/motorsport-tracker.git
-cd motorsport-tracker
+git clone https://github.com/zhangxijing97/opengp
+cd opengp
 ```
 
 **Terminal 1 — Backend** (from the repository root):

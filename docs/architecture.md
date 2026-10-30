@@ -2,7 +2,7 @@
 
 > **Purpose:** A quick reference for OpenGP's system structure, data flow, and essential NestJS concepts.  
 > **Status:** **Current** = present in the repository; **Proposed** = planned, not yet implemented.  
-> **Reviewed:** 2026-10-29 · [GitHub repository](https://github.com/zhangxijing97/motorsport-tracker)
+> **Reviewed:** 2026-10-29 · [GitHub repository](https://github.com/zhangxijing97/opengp)
 
 ## Table of Contents
 
