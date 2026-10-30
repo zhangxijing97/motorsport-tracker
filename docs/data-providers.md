@@ -8,7 +8,7 @@
 
 | Racing series | Providers |
 | --- | --- |
-| **Formula 1 (F1)** | **Jolpica-F1** (primary) + **OpenF1** (supplementary); F1DB (optional historical archive) |
+| **Formula 1 (F1)** | **Jolpica-F1** (primary) + **OpenF1** (supplementary); F1DB (deferred historical archive) |
 | Formula 2 (F2) | — |
 | Formula E | — |
 | IndyCar | — |
@@ -27,14 +27,14 @@
 | GT World Challenge Asia | — |
 | GT World Challenge Australia | — |
 
-**— = Provider not yet selected.** The F1 entries are **selected integration targets**, not a claim that all adapters are implemented or tested. Existing code for other series does not establish a final provider choice.
+**— = Provider not yet selected.** F1 v1 adapters are **implemented on the W03 branch** with offline tests and sampled upstream checks; see [evidence](./w03-backend-handoff.md). This is not a deployment or all-years coverage claim. Existing code for other series does not establish a final provider choice.
 
 ## 2. F1 Providers at a Glance
 
 | Provider | Main responsibility |
 | --- | --- |
-| **Jolpica-F1** · Primary | GP calendars, Race / Qualifying / Sprint results, drivers, teams, standings, basic race lap times |
-| **OpenF1** · Supplementary | Practice / Sprint Qualifying results, Session details and cancellations, Race Control, detailed timing |
+| **Jolpica-F1** · Primary | GP calendars, Race / Qualifying / Sprint results, drivers, teams, standings; lap endpoint deferred |
+| **OpenF1** · Supplementary | Practice / Sprint Qualifying results, Session details and cancellations, historical Race Control; detailed telemetry deferred |
 | **F1DB** · Optional archive | Older and unusual historical records, cross-checking; **downloadable database, not a live API** |
 
 **F1 technical details:** [Endpoints, response fields, mapping rules, limitations and verified samples → `f1-data-providers.md`](./f1-data-providers.md).

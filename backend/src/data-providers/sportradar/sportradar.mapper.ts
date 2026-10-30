@@ -39,7 +39,8 @@ export class SportradarMapper {
       eventId,
       name: stage.description ?? 'Session',
       category: this.mapStageTypeToCategory(stage.type),
-      startTime: stage.scheduled ?? eventStage.scheduled ?? new Date().toISOString(),
+      startTime:
+        stage.scheduled ?? eventStage.scheduled ?? new Date().toISOString(),
       endTime:
         stage.scheduled_end ??
         stage.scheduled ??
@@ -75,9 +76,7 @@ export class SportradarMapper {
         eventStage.venue?.country_name ??
         'Unknown',
       location:
-        eventStage.venue?.city ??
-        eventStage.venue?.city_name ??
-        'Unknown',
+        eventStage.venue?.city ?? eventStage.venue?.city_name ?? 'Unknown',
       venueName: eventStage.venue?.name ?? 'Unknown',
       dateStart: eventStage.scheduled ?? new Date().toISOString(),
       dateEnd:

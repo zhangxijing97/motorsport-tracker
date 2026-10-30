@@ -1,0 +1,63 @@
+{
+  "MRData": {
+    "series": "f1",
+    "limit": "100",
+    "offset": "0",
+    "total": "10",
+    "ConstructorTable": {
+      "season": "2025",
+      "Constructors": [
+        {
+          "constructorId": "alpine",
+          "name": "Alpine F1 Team",
+          "nationality": "French"
+        },
+        {
+          "constructorId": "aston_martin",
+          "name": "Aston Martin",
+          "nationality": "British"
+        },
+        {
+          "constructorId": "ferrari",
+          "name": "Ferrari",
+          "nationality": "Italian"
+        },
+        {
+          "constructorId": "haas",
+          "name": "Haas F1 Team",
+          "nationality": "American"
+        },
+        {
+          "constructorId": "mclaren",
+          "name": "McLaren",
+          "nationality": "British"
+        },
+        {
+          "constructorId": "mercedes",
+          "name": "Mercedes",
+          "nationality": "German"
+        },
+        {
+          "constructorId": "rb",
+          "name": "RB F1 Team",
+          "nationality": "Italian"
+        },
+        {
+          "constructorId": "red_bull",
+          "name": "Red Bull",
+          "nationality": "Austrian"
+        },
+        {
+          "constructorId": "sauber",
+          "name": "Sauber",
+          "nationality": "Swiss"
+        },
+        {
+          "constructorId": "williams",
+          "name": "Williams",
+          "nationality": "British"
+        }
+      ]
+    }
+  }
+}

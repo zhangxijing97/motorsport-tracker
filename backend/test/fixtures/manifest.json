@@ -1,0 +1,142 @@
+[
+  {
+    "file": "china-2025.json",
+    "url": "https://api.jolpi.ca/ergast/f1/2025/2.json?limit=100",
+    "capturedAt": "2026-10-30T06:22:31.350707+00:00",
+    "originalSha256": "4172371cdecb4605e6d2c392bb94cebeee1eed4965fbf0cab5193dc335d792b2",
+    "fixtureSha256": "7d22815a9dc17c4cd86f61b128fb09e045722e915638a4bfbc5d063b0b3f37be"
+  },
+  {
+    "file": "china-2025-race.json",
+    "url": "https://api.jolpi.ca/ergast/f1/2025/2/results.json?limit=100",
+    "capturedAt": "2026-10-30T06:22:36.781245+00:00",
+    "originalSha256": "c85c2aeacb44733a775a7adcf8ba58c3da13146bc7b9422a3b6cf0eef06a09d7",
+    "fixtureSha256": "b06632e4d1339afdd7d34df6727a08fbc879cead3c9c8da2c02c018a55388a5e"
+  },
+  {
+    "file": "china-2025-sprint.json",
+    "url": "https://api.jolpi.ca/ergast/f1/2025/2/sprint.json?limit=100",
+    "capturedAt": "2026-10-30T06:22:41.893249+00:00",
+    "originalSha256": "86132b561f742ce4afef7a9641036ce4322a0cba2acae9e8ca9b9e8c680f4e14",
+    "fixtureSha256": "9a3f1404f23c05c76b4c7a10b4de3ef15b8fa045462b2b3bed42736cdf63a572"
+  },
+  {
+    "file": "belgium-2021.json",
+    "url": "https://api.jolpi.ca/ergast/f1/2021/12/results.json?limit=100",
+    "capturedAt": "2026-10-30T06:22:47.065080+00:00",
+    "originalSha256": "0ef41153725002ca2ed33ec94c68d817cc346cabb79354a5ee147295298a36bb",
+    "fixtureSha256": "669c39f8ae9796931a09f9fa0aa3a29f57f3c8a29e69488dd436cf038cc5b7df"
+  },
+  {
+    "file": "britain-1950.json",
+    "url": "https://api.jolpi.ca/ergast/f1/1950/1/results.json?limit=100",
+    "capturedAt": "2026-10-30T06:22:51.842375+00:00",
+    "originalSha256": "df5119cfd635d5415d0bd41d6681474af2ad585483f2eec64675500f5e3a9fd1",
+    "fixtureSha256": "6d770e86fb0e914db8e5a497ad46376fef686192d2e7c786b0e4932ab4eccc8b"
+  },
+  {
+    "file": "brazil-2024.json",
+    "url": "https://api.jolpi.ca/ergast/f1/2024/21/results.json?limit=100",
+    "capturedAt": "2026-10-30T06:22:56.697767+00:00",
+    "originalSha256": "989b3039a981b9c3a53fd8a70049b5000d96258fc22b60526948f813004f80ab",
+    "fixtureSha256": "7ea3d3834921625a3b3dffea4dcda129bb3d883271053d0f50660cc2eef34765"
+  },
+  {
+    "file": "australia-2026-race.json",
+    "url": "https://api.jolpi.ca/ergast/f1/2026/1/results.json?limit=100",
+    "capturedAt": "2026-10-30T06:23:01.830101+00:00",
+    "originalSha256": "ba45a23314661acd2afb9f0628ef82c6c77055e8ab10cf09df717ae415780ea1",
+    "fixtureSha256": "048ffc154f9f6866c0ccaf6e7bf8dae8970a601a91f2168e12f01bdc4e3240ac"
+  },
+  {
+    "file": "australia-2026-qualifying.json",
+    "url": "https://api.jolpi.ca/ergast/f1/2026/1/qualifying.json?limit=100",
+    "capturedAt": "2026-10-30T06:23:07.237087+00:00",
+    "originalSha256": "f7cf1a976e41618d75e20bbae76582c6c7710a13e23e3ac4a28c2b867376b5d3",
+    "fixtureSha256": "c0a3ea7aa9285e80b217481dad55be40162796b383ece0b80d86ebafd53f63d5"
+  },
+  {
+    "file": "china-2025-standings.json",
+    "url": "https://api.jolpi.ca/ergast/f1/2025/2/driverStandings.json?limit=100",
+    "capturedAt": "2026-10-30T06:23:12.557023+00:00",
+    "originalSha256": "60fff44ee6267f7941859f78148775c9810691e4aded26ae59b2c4f1caf1fea7",
+    "fixtureSha256": "ef65d3ac7bacf0316d82eeba291a1db96241dcc8eb05d3455d9f2e1a0a1c5ea1"
+  },
+  {
+    "file": "china-2025-constructors.json",
+    "url": "https://api.jolpi.ca/ergast/f1/2025/2/constructorStandings.json?limit=100",
+    "capturedAt": "2026-10-30T06:23:20.012905+00:00",
+    "originalSha256": "6ad90e85795746761d5e2eec7fc354e1a4ee4336264929501f02919be0bf972e",
+    "fixtureSha256": "0bf8a796247eba33b9086c5d6efd88f9e072c5d3bfb76d5136e2852c952ad4a0"
+  },
+  {
+    "file": "openf1-china-fp1.json",
+    "url": "https://api.openf1.org/v1/session_result?session_key=9988",
+    "capturedAt": "2026-10-30T06:23:25.742261+00:00",
+    "originalSha256": "ecc0e754622fc71510831243feb16e2ceb929cad5d59b1a1e00d06785230d026",
+    "fixtureSha256": "f124603b000432f1b1ab081ffaffd2a6ef4df0a9b482addb51f8c95108134008"
+  },
+  {
+    "file": "openf1-china-sq.json",
+    "url": "https://api.openf1.org/v1/session_result?session_key=9989",
+    "capturedAt": "2026-10-30T06:23:30.394376+00:00",
+    "originalSha256": "5dc5e50232a5969a3db6851cbc6baf2aff5e5eb99fb3a949bffc8f51d042bb3d",
+    "fixtureSha256": "5fb34e83cab161a15cfb074f605b70ec59f1341a5db96cb93710eed0f2dfee4d"
+  },
+  {
+    "file": "openf1-china-drivers.json",
+    "url": "https://api.openf1.org/v1/drivers?session_key=9988",
+    "capturedAt": "2026-10-30T06:23:34.857485+00:00",
+    "originalSha256": "64a87abdf53e12c865196fdc965045226567fb8cf0c261c2bd594a5045635855",
+    "fixtureSha256": "5f7b85290d6c36bea226e1855fbc53bfd753533487510321dbeacd240e890fed"
+  },
+  {
+    "file": "openf1-imola-2023.json",
+    "url": "https://api.openf1.org/v1/sessions?year=2023&circuit_key=6",
+    "capturedAt": "2026-10-30T06:23:39.191181+00:00",
+    "originalSha256": "91deb653ae0b8a8832a69c7b4729398b32b27ce7ea6adbf5f38fbdb6f3003413",
+    "fixtureSha256": "dc0e6617213c310d3a70ac8166227b69a9ca965b2fa73a503378fef39e9f0c67"
+  },
+  {
+    "file": "openf1-australia-2026.json",
+    "url": "https://api.openf1.org/v1/sessions?year=2026&country_name=Australia",
+    "capturedAt": "2026-10-30T06:23:43.510710+00:00",
+    "originalSha256": "0de2b6997f77eb68c3cfa504e513401890f78ce31249221d5e75e1a1a20f7d60",
+    "fixtureSha256": "84a6cd0680e085a740188c8f38c9fb411cff2f787b43d43920ef5ef3719dff65"
+  },
+  {
+    "file": "openf1-meetings-2025.json",
+    "url": "https://api.openf1.org/v1/meetings?year=2025",
+    "capturedAt": "2026-10-30T06:23:48.381952+00:00",
+    "originalSha256": "d73e3f89571c16cb29ec9a842b5abbd5600a38b94fe9fa6762b949624b004515",
+    "fixtureSha256": "2f5cd1ecd6a408749ef38a3e02e08d1103ccd081be230ec1ae77cd7d5088d98d"
+  },
+  {
+    "file": "drivers-2025.json",
+    "url": "https://api.jolpi.ca/ergast/f1/2025/drivers.json?limit=100",
+    "capturedAt": "2026-10-30T06:30:10.689046+00:00",
+    "originalSha256": "35ffd6d15b1f5848cfb728e85a5ca254521adb1856cc8828e7ed47ba6137f866",
+    "fixtureSha256": "a114161a2580f69b147fc7b0f55d2c9b92300b4cc7e963e189e409b290643d83"
+  },
+  {
+    "file": "constructors-2025.json",
+    "url": "https://api.jolpi.ca/ergast/f1/2025/constructors.json?limit=100",
+    "capturedAt": "2026-10-30T06:30:14.631613+00:00",
+    "originalSha256": "815eaa12026df2501e7da58d28fed91d1d50f29d2c860c9bf2cbdeb5998f117b",
+    "fixtureSha256": "9cc4535013e05131b08e89fcf635f2d6a63a743d04b0606f2cdadd20fdf228e9"
+  },
+  {
+    "file": "australia-2026.json",
+    "url": "https://api.jolpi.ca/ergast/f1/2026/1.json?limit=100",
+    "capturedAt": "2026-10-30T06:20:00.323455+00:00",
+    "originalSha256": "cc68835a221ebd1140dec317967cd13337d6709cc0254e460ea3d0c0400e4fd4",
+    "fixtureSha256": "5c3c14bad8e9e683caf5365feb32acc271d9b71d4e4a58766ce80a70222e42bf"
+  },
+  {
+    "file": "openf1-2025-sessions.json",
+    "url": "https://api.openf1.org/v1/sessions?year=2025&country_name=China",
+    "capturedAt": "2026-10-30T06:20:03.640247+00:00",
+    "originalSha256": "1da2c27862f0db1690514b10f529f3f0fc274669923fb1117215eb7f947a1fb5",
+    "fixtureSha256": "7fcc8c78f71655445c3ddbcf3f793b3be02f5b1e78f7ce57ec224128ef7515e3"
+  }
+]

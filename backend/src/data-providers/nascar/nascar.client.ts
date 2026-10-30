@@ -51,7 +51,12 @@ export class NascarClient {
           },
         });
 
-        setCachedValue(this.responseCache, path, response.data, this.cacheTtlMs);
+        setCachedValue(
+          this.responseCache,
+          path,
+          response.data,
+          this.cacheTtlMs,
+        );
         return response.data;
       } catch (error) {
         lastError = error;

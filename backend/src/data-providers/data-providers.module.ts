@@ -1,3 +1,6 @@
+import { JolpicaClient } from './jolpica/jolpica.client';
+import { JolpicaMapper } from './jolpica/jolpica.mapper';
+import { JolpicaProvider } from './jolpica/jolpica.provider';
 import { Module } from '@nestjs/common';
 import { RacingDataProviderRegistry } from './racing-data-provider.registry';
 import { OpenF1Client } from './openf1/openf1.client';
@@ -13,6 +16,9 @@ import { NascarProvider } from './nascar/nascar.provider';
 @Module({
   providers: [
     RacingDataProviderRegistry,
+    JolpicaClient,
+    JolpicaMapper,
+    JolpicaProvider,
 
     OpenF1Client,
     OpenF1Mapper,

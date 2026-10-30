@@ -61,7 +61,6 @@
 //   };
 // };
 
-
 export type NascarSeriesListItem = {
   id: string;
   alias: string;

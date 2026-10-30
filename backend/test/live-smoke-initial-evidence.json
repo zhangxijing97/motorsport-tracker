@@ -1,0 +1,214 @@
+{
+  "checkedAt": "2026-10-30T06:52:55.474Z",
+  "mode": "real upstream via local Nest HTTP server; no deployment",
+  "checks": [
+    {
+      "path": "/api/v1/events?year=2026&from=2026-03-06&to=2026-03-08",
+      "status": 200,
+      "passed": true,
+      "availability": "available",
+      "warnings": [],
+      "rows": 1,
+      "sources": [
+        {
+          "provider": "jolpica",
+          "resource": "/2026.json",
+          "observedAt": "2026-10-30T06:52:58.118Z",
+          "contentHash": "b9ea9fe3ea6b7439781463bea62cd607f16e10215e1f145a920cd9d7ff3e6335"
+        },
+        {
+          "provider": "openf1",
+          "resource": "/sessions?year=2026",
+          "observedAt": "2026-10-30T06:53:01.144Z",
+          "contentHash": "f76bc38e3326eec1d43b5108e323dc197f1b690cd9e505c47210414de819e61b"
+        }
+      ]
+    },
+    {
+      "path": "/api/v1/sessions/f1-2026-australian-grand-prix:race/results",
+      "status": 200,
+      "passed": true,
+      "availability": "available",
+      "warnings": [],
+      "rows": 22,
+      "sources": [
+        {
+          "provider": "jolpica",
+          "resource": "/2026/1/results.json",
+          "observedAt": "2026-10-30T06:53:03.979Z",
+          "contentHash": "5eced79221ca363c35b5dc337a8a54c579eea5d73f3a28ea875fbe62e952eb23"
+        }
+      ]
+    },
+    {
+      "path": "/api/v1/sessions/f1-2026-australian-grand-prix:qualifying/results",
+      "status": 200,
+      "passed": true,
+      "availability": "available",
+      "warnings": [],
+      "rows": 19,
+      "sources": [
+        {
+          "provider": "jolpica",
+          "resource": "/2026/1/qualifying.json",
+          "observedAt": "2026-10-30T06:53:06.751Z",
+          "contentHash": "c63cdfc49bfa8796a7698a6b421d641d5a3acfcaddaf659fc71b9d434b691f6e"
+        }
+      ]
+    },
+    {
+      "path": "/api/v1/sessions/openf1-session-9988/results",
+      "status": 200,
+      "passed": true,
+      "availability": "available",
+      "warnings": [],
+      "rows": 20,
+      "sources": [
+        {
+          "provider": "openf1",
+          "resource": "/session_result?session_key=9988",
+          "observedAt": "2026-10-30T06:53:22.510Z",
+          "contentHash": "ecc0e754622fc71510831243feb16e2ceb929cad5d59b1a1e00d06785230d026"
+        },
+        {
+          "provider": "openf1",
+          "resource": "/drivers?session_key=9988",
+          "observedAt": "2026-10-30T06:53:26.105Z",
+          "contentHash": "64a87abdf53e12c865196fdc965045226567fb8cf0c261c2bd594a5045635855"
+        },
+        {
+          "provider": "jolpica",
+          "resource": "/2025/drivers.json",
+          "observedAt": "2026-10-30T06:53:19.882Z",
+          "contentHash": "cf49705c99b1f13a35322c2189d1833569daeed655a8d503c632bc96a1b5fa1f"
+        },
+        {
+          "provider": "jolpica",
+          "resource": "/2025/constructors.json",
+          "observedAt": "2026-10-30T06:53:19.903Z",
+          "contentHash": "70ead963b910855912ecdd744d200c64589ac58f7d90f0e94f29020bcfb667d9"
+        }
+      ]
+    },
+    {
+      "path": "/api/v1/sessions/openf1-session-9989/results",
+      "status": 200,
+      "passed": true,
+      "availability": "available",
+      "warnings": [],
+      "rows": 20,
+      "sources": [
+        {
+          "provider": "openf1",
+          "resource": "/session_result?session_key=9989",
+          "observedAt": "2026-10-30T06:53:31.743Z",
+          "contentHash": "5e8841fd8c9c43587d0bb844b8cae37aa523e33de943dad10c0b699724e54b26"
+        },
+        {
+          "provider": "openf1",
+          "resource": "/drivers?session_key=9989",
+          "observedAt": "2026-10-30T06:53:36.002Z",
+          "contentHash": "f6ef67ddd3ba674772fd09b2655d3fab14337af99e806433bf2fc915bc9b3cf3"
+        },
+        {
+          "provider": "jolpica",
+          "resource": "/2025/drivers.json",
+          "observedAt": "2026-10-30T06:53:19.882Z",
+          "contentHash": "cf49705c99b1f13a35322c2189d1833569daeed655a8d503c632bc96a1b5fa1f"
+        },
+        {
+          "provider": "jolpica",
+          "resource": "/2025/constructors.json",
+          "observedAt": "2026-10-30T06:53:19.903Z",
+          "contentHash": "70ead963b910855912ecdd744d200c64589ac58f7d90f0e94f29020bcfb667d9"
+        }
+      ]
+    },
+    {
+      "path": "/api/v1/standings?seasonId=f1-2025&round=2&type=drivers",
+      "status": 200,
+      "passed": true,
+      "availability": "available",
+      "warnings": [],
+      "rows": 20,
+      "sources": [
+        {
+          "provider": "jolpica",
+          "resource": "/2025/2/driverStandings.json",
+          "observedAt": "2026-10-30T06:53:40.928Z",
+          "contentHash": "4d36d5cc05f8f9fac548c222f1c2e99da38c63ac059282240f781529a00c85ec"
+        }
+      ]
+    },
+    {
+      "path": "/api/v1/sessions/f1-1950-british-grand-prix:race/results",
+      "status": 200,
+      "passed": true,
+      "availability": "available",
+      "warnings": [],
+      "rows": 23,
+      "sources": [
+        {
+          "provider": "jolpica",
+          "resource": "/1950/1/results.json",
+          "observedAt": "2026-10-30T06:53:47.509Z",
+          "contentHash": "43b56d3fe215a1ca712243e2b2ca197616719edc65a09620e23ae48c1909c8bc"
+        }
+      ]
+    },
+    {
+      "path": "/api/v1/sessions/f1-2021-belgian-grand-prix:race/results",
+      "status": 200,
+      "passed": true,
+      "availability": "available",
+      "warnings": [],
+      "rows": 20,
+      "sources": [
+        {
+          "provider": "jolpica",
+          "resource": "/2021/12/results.json",
+          "observedAt": "2026-10-30T06:53:53.418Z",
+          "contentHash": "00bfd187e81ecda2d7ea1a5b2bcb89b1715b9785f396648659b8b5b6d61e9331"
+        }
+      ]
+    },
+    {
+      "path": "/api/v1/sessions/openf1-session-9086/results",
+      "status": 200,
+      "passed": true,
+      "availability": "not_applicable",
+      "warnings": [],
+      "rows": null,
+      "sources": [
+        {
+          "provider": "jolpica",
+          "resource": "/2023.json",
+          "observedAt": "2026-10-30T06:54:05.429Z",
+          "contentHash": "11a419834a323e67fefdce643a3171b8fab6662b3933d707228d321e036a413a"
+        },
+        {
+          "provider": "openf1",
+          "resource": "/sessions?year=2023",
+          "observedAt": "2026-10-30T06:54:08.719Z",
+          "contentHash": "66288b28cbfdc01628b854f1a9c17b689461bfe1124dc24a6e128b7c24d1c58d"
+        }
+      ]
+    },
+    {
+      "path": "/api/v1/sessions/openf1-session-9998/race-control",
+      "status": 200,
+      "passed": true,
+      "availability": "available",
+      "warnings": [],
+      "rows": 50,
+      "sources": [
+        {
+          "provider": "openf1",
+          "resource": "/race_control?session_key=9998",
+          "observedAt": "2026-10-30T06:54:17.353Z",
+          "contentHash": "9a49a154150f3112ed41c64b3e19cc5f9466a70374cc860c2b4c2a758845ee37"
+        }
+      ]
+    }
+  ]
+}

@@ -1,3 +1,5 @@
+import { RacingController } from '../racing/racing.controller';
+import { RacingService } from '../racing/racing.service';
 // Events module: Register the events API and its data provider dependencies.
 
 import { Module } from '@nestjs/common';
@@ -10,7 +12,7 @@ import { EventsService } from './events.service';
   imports: [DataProvidersModule],
 
   // Register the events controller and service
-  controllers: [EventsController],
-  providers: [EventsService],
+  controllers: [EventsController, RacingController],
+  providers: [EventsService, RacingService],
 })
 export class EventsModule {}

@@ -1,7 +1,7 @@
 # OpenGP — Formula 1 Data Providers & Field Mapping
 
 > **Purpose:** Engineering reference for the **selected F1 data sources**: what each supplies, how to request it, how to interpret the response, and how to map it to OpenGP concepts.  
-> **Status:** **Supplier selection: selected for F1 v1 design.** **Mapping: design input for D01.1; not yet an approved Canonical Model.** **Backend integration: not complete.**  
+> **Status:** **Supplier selection: selected for F1 v1 design.** **W03: F1 v1 implemented on the feature branch.** Exact DTOs and migration decisions are in [`api-contract.md`](./api-contract.md); execution evidence is in [`w03-backend-handoff.md`](./w03-backend-handoff.md). Not deployed.
 > **Reviewed:** 2026-10-29 · **Owner:** D01 · Engineering / W02 research handoff · [Repository](https://github.com/zhangxijing97/opengp)
 
 **Scope:** Formula 1 only. This file does **not** define OpenGP's public HTTP API; see [`api-contract.md`](./api-contract.md). Other series remain under the cross-series [`data-providers.md`](./data-providers.md). Do not create an equivalent file for every series unless needed.
@@ -25,7 +25,7 @@ This combination is appropriate for a **non-commercial, mostly schedule-and-post
 | **DESIGN** | Proposed OpenGP transformation or precedence policy; **requires D01.1 approval**. |
 | **OPEN** | Not sufficiently checked, or blocked by a product/engineering choice. |
 
-**Evidence boundary:** This document reuses W02's captured responses and read-only code audit. In this update we refreshed public supplier documentation; **we did not run new raw API requests or backend integration tests**. No provider is an official FIA/Formula 1 API. “Published classification” means upstream content reflecting published race results, **not** certification of final FIA status or guaranteed accuracy.
+**Evidence boundary:** This document reuses W02's captured responses and read-only code audit. That W02 documentation update refreshed supplier documentation without new backend tests. **W03 subsequently captured new supplier fixtures and executed backend tests**, separately documented in the W03 handoff. No provider is an official FIA/Formula 1 API. “Published classification” means upstream content reflecting published race results, **not** certification of final FIA status or guaranteed accuracy.
 
 ### 1.3 Capability ownership
 
@@ -54,7 +54,7 @@ This combination is appropriate for a **non-commercial, mostly schedule-and-post
 | **OpenF1** | `https://api.openf1.org/v1/` | Free historical without key, **3 req/s, 30 req/min**; live window requires paid access | **2023–present** | Site intended for personal/education/research/non-commercial fan projects. Footer cites **CC BY-NC-SA 4.0**; FAQ says credit is optional: **conservatively attribute**; do not assume image or broadcast rights |
 | **F1DB** | GitHub versioned JSON/CSV/SQLite/SQL download | Free releases, no per-record REST service or perpetual uptime guarantee | Historical material from **1950**, specific categories vary by period | **CC BY 4.0** with attribution; on-demand import, version + schema + hash tracking |
 
-**OpenF1 live window:** According to its FAQ, data is considered live from **30 minutes before Session start until 30 minutes after Session end**. That interval is **not part of this free-first implementation**. The site does not promise a historical-data update latency SLA.
+**OpenF1 live window:** According to its FAQ, data is considered live from **30 minutes before Session start until 30 minutes after Session end**. That interval is **not part of this free-first implementation**. The site does not promise a historical-data update latency SLA. **W03 runtime observation (2026-10-30):** OpenF1 also returned HTTP 401 stating that an active live Session globally restricts anonymous API access, including past Sessions, until it ends. Historical queries therefore are not guaranteed available during another Session's live window; W03 surfaces `access_restricted`. See the retained live-smoke evidence in the handoff.
 
 **Jolpica paging:** Ergast-compatible responses use `MRData.limit`, `MRData.offset`, `MRData.total` (frequently strings); defaults 30, maximum 100 per page. Set `limit=100`, follow `offset` until complete, and respect HTTP `429` and `Retry-After` where supplied. Do not repeatedly request each driver when a bulk endpoint suffices.
 
@@ -176,9 +176,9 @@ This combination is appropriate for a **non-commercial, mostly schedule-and-post
 
 If approved for historical import, use a pinned GitHub release / checksum and its matching **split-file schema**. Relevant collections include season, race, driver, constructor, Practice result, qualifying result, sprint qualifying/race result, race result, per-round standings and participant tables. Note that records in some files begin later than 1950 (e.g. W02 saw FP1 starting in 1986), and a release can include future races with **no results**. Do not auto-overwrite Jolpica results with F1DB rows.
 
-## 4. Proposed provider-to-OpenGP mapping
+## 4. Provider-to-OpenGP semantic mapping
 
-**Design-only mapping.** These names describe intended **canonical concepts**. `api-contract.md` and D01.1 must finalize actual TypeScript types, endpoint DTOs, nullability and persistence before code changes.
+**Semantic reference, not literal DTO names.** W03 implements the F1 subset using the exact types in `backend/src/racing/model.ts` and the [v1 contract](./api-contract.md). Optional laps/grid/telemetry and F1DB remain deferred. The W02 evidence labels below retain their original scope.
 
 ### 4.1 Series / Season / Event / Session
 
@@ -258,7 +258,7 @@ A single `status` field is insufficient; D01.1 should model at least these **ind
 
 **DESIGN matching order:** (1) same season, (2) known circuit crosswalk, (3) event identity and date range, (4) Session kind and start time, (5) manual review if ambiguous. Use explicit `ExternalIdentity(provider, entityType, externalId, scope, validFrom, validTo)` or an equivalent mapping table. Never match solely by country, driver number or fuzzy team name. Re-scheduled Events should keep the same OpenGP identity and a schedule revision/alias.
 
-Current `openf1-session-{sessionKey}` IDs are **existing public identifiers**. Preserve resolution/alias behavior during migration rather than breaking links immediately. New canonical ID format is **not yet decided**.
+Current `openf1-session-{sessionKey}` IDs are **existing public identifiers**. Preserve resolution/alias behavior during migration rather than breaking links immediately. W03 now defines canonical IDs and accepts these legacy aliases; see the v1 contract.
 
 ### 5.2 Precedence and reconciliation
 
@@ -301,34 +301,40 @@ The following cases were **recorded and checked in W02**, not newly re-run here.
 
 These URLs are **verification references**, not permission to scrape or redistribute their full contents. W02 sample bodies and hashes remain in the original research handoff, **not in this GitHub repo**. A future PR should add only reusable, minimized fixture data and explicit license/provenance notes.
 
-## 7. Implementation readiness and unresolved items
+## 7. W03 implementation and remaining limits
 
-### 7.1 Current backend changes needed (after contract approval)
+Implemented on the W03 feature branch: capability routing, Jolpica pagination /
+classification / standings, OpenF1 session_result / cancellation / Race Control,
+canonical DTOs, old external-ID aliases, query validation, structured errors,
+bounded caches and offline fixtures. See [contract](./api-contract.md),
+[architecture](./architecture.md) and [executed evidence](./w03-backend-handoff.md).
 
-| Existing code | Gap | Suggested engineering task |
-| --- | --- | --- |
-| `openf1/openf1.provider.ts` | Lap-best sorting and assigned `position=index+1`; not a published Race classification | **P0:** remove any claim that this is official ranking; replace F1 classifications with responsible provider's result feed |
-| `openf1/openf1.client.ts` | Existing client fetches meetings, sessions, drivers and laps; does not implement new `/session_result` mapping in the verified code baseline | Add typed, validated `session_result` client and mapper for Practice / SQ |
-| `racing-data-provider.registry.ts` | First adapter by series | Introduce capability-aware routing for F1, preserving other series |
-| `events/types.ts` | Single `status`, mandatory numeric position/laps, mandatory Session end timestamp | Canonical status axes, nullable fields, decimal points, source provenance, source-independent IDs |
-| `events.service.ts` | `Promise.allSettled` can turn failures into empty arrays | Make true empty / not yet published / unsupported / upstream error distinguishable |
-| New `jolpica/` | No Jolpica adapter in current baseline | Implement HTTP client, pagination, mapping, rate limiting, caching, retries |
-| Existing `/events/*` and `/sessions/:id/detail` | Current routes and provider-shaped IDs are in use | Define compatibility/aliases before changing route/DTO behavior |
+Specific mapping decisions / new captured evidence:
 
-This document **does not mandate a database**, scheduler, cloud migration or `/api/v1` prefix by itself. Those are D01 design choices dependent on freshness requirements, traffic and the approved Canonical/API Contract. Avoid changing NASCAR and Sportradar modules as part of the F1 task unless an explicit compatibility need is identified.
+- Canonical GP identity uses year + normalized race name, not round or date.
+  Name changes still need an explicit alias; there is no durable ID registry.
+- Circuit mappings are explicit (2025 OpenF1 meeting catalog was captured).
+  Matching requires season/circuit/race date and an unambiguous session kind.
+- OpenF1's `Kimi Antonelli` and Jolpica's `Andrea Kimi Antonelli` require an explicit
+  2025–2026 alias plus `ANT` acronym and the season roster. Unmatched stand-ins
+  remain scoped identities with partial availability; team aliases also require
+  a matching constructor in that season's Jolpica directory.
+- The 1950 Britain capture contains 23 source result rows; known cars 10 and 9
+  link two participants each, yielding 21 Entries while preserving all 23 rows.
+  Points stay per participant. No universal shared-car inference is implemented.
+- Future results: `not_published`. Historical empty result: `unknown`; an
+  unexpected upstream 404 remains an upstream error. No guessed zero finishers.
+- W03 uses `published_unverified` for every returned classification/standings.
+  Clock-inferred lifecycle never establishes FIA-final publication.
+- Response hashes and prior observation links are **in memory only**. A detected
+  Race/Sprint change invalidates standings; reads refresh both latest tables but
+  cannot establish an atomic upstream update or reconstruct missed amendments.
 
-### 7.2 Open questions / gates
-
-- **Canonical model:** exact entity/DTO fields, entry scope, IDs, nullable timings, source metadata and enum names — **D01.1 approval required**.
-- **Publication semantics:** how to label provisional vs final, how to detect changes and when to alert — W02 verified final amended snapshots exist, **not** the speed of publication or amendment propagation.
-- **Historic gaps:** 1950–2022 Practice and rare status coverage needs per-season coverage tracking; F1DB import remains deferred unless product scope changes.
-- **Free live:** not available as a guaranteed free capability; decide whether OpenGP v1 should show scheduled/inferred status rather than “live”.
-- **Grid:** mapping from Qualifying/SQ key to intended Race/Sprint and late pit-lane penalties still needs special-case testing.
-- **Licensing/attribution:** confirm release-time credit implementation and whether any image/media use is actually licensed; API JSON rights do not imply image rights.
-- **Caching/hosting:** define where snapshots persist and how scheduled fetches work on the actual Render tier; avoid one request per user page view.
-- **Runtime verification:** directly test final adapters in the development environment, including `HTTP 429`, timeout, unexpected types, source revision and end-to-end API response; these tests were **not performed in this document task**.
-
-**Handoff gate:** D01.1 may start Canonical Data Model v1 now. Backend implementation may begin once the F1 v1 scope, canonical/HTTP contract, compatibility policy, and initial verification fixtures are approved. A successful build alone is not proof of data correctness.
+Still deferred: F1DB, historical lap API, grid observations, telemetry, persistent
+sync/revision storage, broad historical completeness verification and UI
+attribution rendering. No free real-time guarantee or production deployment.
+The W02 proposed mapping and external references are historical research context;
+they do not override the implemented v1 contract.
 
 ## 8. Primary documentation and evidence sources
 

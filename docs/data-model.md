@@ -1,10 +1,32 @@
 # OpenGP — Canonical Data Model v1
 
-> **Status:** Proposed for engineering review, not yet implemented. **Scope:** multi-series model, F1-first implementation. **Updated:** 2026-10-30.
+> **Status:** Multi-series semantic proposal; **W03 F1 subset implemented on the feature branch**, not deployed. Exact DTOs are in `backend/src/racing/model.ts`. **Updated:** 2026-10-30.
 >
 > **Authority:** This document defines the internal meaning and relationships of racing entities. HTTP routes and JSON responses are specified in [`api-contract.md`](./api-contract.md); supplier mappings in [`f1-data-providers.md`](./f1-data-providers.md). A canonical model does **not** require a database.
 
-## 1. Model at a glance
+## W03 implementation boundary
+
+The semantic proposal below is retained for future multi-series work. The
+implemented [HTTP contract](./api-contract.md) determines actual v1 fields.
+
+| Proposed concept | W03 F1 implementation |
+| --- | --- |
+| Global Participant / Team | F1 Driver / Constructor with external crosswalks; global cross-series identity deferred |
+| EntryParticipant join entity | `Entry.participantIds[]`; shared-car result rows can identify the individual participant |
+| Season nullable year | F1 seasons currently require a year; non-calendar seasons deferred |
+| ResultSet publication | `published_unverified`; no provider-certified final status is asserted |
+| Session lifecycle | `scheduled`, `started`, `suspended`, `finished`, `cancelled`, `unknown`; basis is explicit |
+| Availability | Includes `unknown` for ambiguous historical empty results |
+| StandingsSnapshot | Supplier `Standings` + source hash/retrieval time; latest or round-specific reads, no retained historical snapshot store |
+| ExternalIdentity / Provenance | Embedded external IDs and envelope `meta.sources[]` |
+| Persistence | Demand-driven in-process caches and bounded revision pointers; no durable sync |
+
+Entries are materialized with published results. GP round/date changes preserve
+the deterministic name-based Event ID; GP renames still need explicit aliases.
+Known 1950 Britain shared cars are scoped mappings, not a universal heuristic.
+See [W03 handoff](./w03-backend-handoff.md) for verification and remaining risks.
+
+## 1. Model at a glance (multi-series proposal)
 
 ```mermaid
 erDiagram
@@ -74,4 +96,4 @@ Jolpica is primary for seasons, rounds, schedule, race/qualifying/sprint classif
 4. Actual result `final` provenance and revision retention; providers do not universally certify FIA final status.
 5. Which proposed entities are required now versus deferred without losing future compatibility.
 
-**Reference:** [Database schema draft](./database-schema.dbml) is an *optional persistence design*, not an instruction to deploy a database.
+**Persistence:** A database schema remains optional future design; no database or schema deployment is part of W03.

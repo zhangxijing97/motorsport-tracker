@@ -59,9 +59,7 @@ export class NascarMapper {
         'Unknown',
       venueName: event.track?.name ?? 'Unknown',
       dateStart:
-        event.start_date ??
-        sessions[0]?.startTime ??
-        new Date().toISOString(),
+        event.start_date ?? sessions[0]?.startTime ?? new Date().toISOString(),
       dateEnd:
         sessions[sessions.length - 1]?.endTime ??
         event.start_date ??

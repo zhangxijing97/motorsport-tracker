@@ -1,0 +1,123 @@
+{
+  "checkedAt": "2026-10-30T22:37:38.110Z",
+  "mode": "real upstream via local Nest HTTP server; no deployment",
+  "checks": [
+    {
+      "path": "/api/v1/series/f1/seasons?limit=100",
+      "status": 200,
+      "passed": true,
+      "availability": "available",
+      "warnings": [],
+      "rows": 77,
+      "sources": [
+        {
+          "provider": "jolpica",
+          "resource": "/seasons.json",
+          "observedAt": "2026-10-30T22:37:42.228Z",
+          "contentHash": "ba613277222c1f20a880dad50555d6f15a811dab7121b9259379a203df5009a7"
+        }
+      ]
+    },
+    {
+      "path": "/api/v1/sessions/openf1-session-9993/results",
+      "passed": false,
+      "error": "{\"error\":{\"code\":\"ACCESS_RESTRICTED\",\"message\":\"Racing data is temporarily unavailable.\"},\"meta\":{\"availability\":\"access_restricted\"}}\n\n503 !== 200\n"
+    },
+    {
+      "path": "/api/v1/events?year=2026&from=2026-03-06&to=2026-03-08",
+      "status": 200,
+      "passed": true,
+      "availability": "partial",
+      "warnings": [
+        "openf1_session_enrichment:ACCESS_RESTRICTED"
+      ],
+      "rows": 1,
+      "sources": [
+        {
+          "provider": "jolpica",
+          "resource": "/2026.json",
+          "observedAt": "2026-10-30T22:37:49.637Z",
+          "contentHash": "b9ea9fe3ea6b7439781463bea62cd607f16e10215e1f145a920cd9d7ff3e6335"
+        }
+      ]
+    },
+    {
+      "path": "/api/v1/sessions/f1-2026-australian-grand-prix:race/results",
+      "status": 200,
+      "passed": true,
+      "availability": "available",
+      "warnings": [],
+      "rows": 22,
+      "sources": [
+        {
+          "provider": "jolpica",
+          "resource": "/2026/1/results.json",
+          "observedAt": "2026-10-30T22:37:58.766Z",
+          "contentHash": "5eced79221ca363c35b5dc337a8a54c579eea5d73f3a28ea875fbe62e952eb23"
+        }
+      ]
+    },
+    {
+      "path": "/api/v1/sessions/f1-2026-australian-grand-prix:qualifying/results",
+      "status": 200,
+      "passed": true,
+      "availability": "available",
+      "warnings": [],
+      "rows": 19,
+      "sources": [
+        {
+          "provider": "jolpica",
+          "resource": "/2026/1/qualifying.json",
+          "observedAt": "2026-10-30T22:38:04.848Z",
+          "contentHash": "c63cdfc49bfa8796a7698a6b421d641d5a3acfcaddaf659fc71b9d434b691f6e"
+        }
+      ]
+    },
+    {
+      "path": "/api/v1/sessions/openf1-session-9988/results",
+      "passed": false,
+      "error": "{\"error\":{\"code\":\"ACCESS_RESTRICTED\",\"message\":\"Racing data is temporarily unavailable.\"},\"meta\":{\"availability\":\"access_restricted\"}}\n\n503 !== 200\n"
+    },
+    {
+      "path": "/api/v1/sessions/openf1-session-9989/results",
+      "passed": false,
+      "error": "{\"error\":{\"code\":\"ACCESS_RESTRICTED\",\"message\":\"Racing data is temporarily unavailable.\"},\"meta\":{\"availability\":\"access_restricted\"}}\n\n503 !== 200\n"
+    },
+    {
+      "path": "/api/v1/standings?seasonId=f1-2025&round=2&type=drivers",
+      "status": 200,
+      "passed": true,
+      "availability": "available",
+      "warnings": [],
+      "rows": 20,
+      "sources": [
+        {
+          "provider": "jolpica",
+          "resource": "/2025/2/driverStandings.json",
+          "observedAt": "2026-10-30T22:38:12.633Z",
+          "contentHash": "4d36d5cc05f8f9fac548c222f1c2e99da38c63ac059282240f781529a00c85ec"
+        }
+      ]
+    },
+    {
+      "path": "/api/v1/sessions/f1-1950-british-grand-prix:race/results",
+      "passed": false,
+      "error": "{\"error\":{\"code\":\"ACCESS_RESTRICTED\",\"message\":\"Racing data is temporarily unavailable.\"},\"meta\":{\"availability\":\"access_restricted\"}}\n\n503 !== 200\n"
+    },
+    {
+      "path": "/api/v1/sessions/f1-2021-belgian-grand-prix:race/results",
+      "passed": false,
+      "error": "{\"error\":{\"code\":\"ACCESS_RESTRICTED\",\"message\":\"Racing data is temporarily unavailable.\"},\"meta\":{\"availability\":\"access_restricted\"}}\n\n503 !== 200\n"
+    },
+    {
+      "path": "/api/v1/sessions/openf1-session-9086/results",
+      "passed": false,
+      "error": "{\"error\":{\"code\":\"ACCESS_RESTRICTED\",\"message\":\"Racing data is temporarily unavailable.\"},\"meta\":{\"availability\":\"access_restricted\"}}\n\n503 !== 200\n"
+    },
+    {
+      "path": "/api/v1/sessions/openf1-session-9998/race-control",
+      "passed": false,
+      "error": "{\"error\":{\"code\":\"ACCESS_RESTRICTED\",\"message\":\"Racing data is temporarily unavailable.\"},\"meta\":{\"availability\":\"access_restricted\"}}\n\n503 !== 200\n"
+    }
+  ]
+}

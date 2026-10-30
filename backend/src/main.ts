@@ -8,10 +8,7 @@ async function bootstrap() {
 
   // Allow browser requests from the local and deployed frontends
   app.enableCors({
-    origin: [
-      'http://localhost:3000',
-      'https://motorsporttracker.netlify.app',
-    ],
+    origin: ['http://localhost:3000', 'https://motorsporttracker.netlify.app'],
   });
 
   // Use the environment port or default to 3001
@@ -19,4 +16,4 @@ async function bootstrap() {
   await app.listen(port);
 }
 
-bootstrap();
+void bootstrap();

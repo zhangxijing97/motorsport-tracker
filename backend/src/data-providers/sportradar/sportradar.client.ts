@@ -55,7 +55,12 @@ export class SportradarClient {
           },
         });
 
-        setCachedValue(this.responseCache, cacheKey, response.data, this.cacheTtlMs);
+        setCachedValue(
+          this.responseCache,
+          cacheKey,
+          response.data,
+          this.cacheTtlMs,
+        );
 
         return response.data;
       } catch (error) {

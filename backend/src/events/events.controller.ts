@@ -1,55 +1,37 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { EventsService } from './events.service';
-
+import { textParam, validateKeys, type QueryValues } from '../racing/query';
 @Controller()
 export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
-
+  private listQuery(q: QueryValues) {
+    validateKeys(q, ['date', 'series']);
+    return [textParam(q, 'date'), textParam(q, 'series')] as const;
+  }
   @Get('events/today')
-  getTodayEvents(
-    @Query('date') date?: string,
-    @Query('series') series?: string,
-  ) {
-    return this.eventsService.getEventsByDate(date, series);
+  getTodayEvents(@Query() q: QueryValues) {
+    return this.eventsService.getEventsByDate(...this.listQuery(q));
   }
-
   @Get('events/upcoming')
-  getUpcomingEvents(
-    @Query('date') date?: string,
-    @Query('series') series?: string,
-  ) {
-    return this.eventsService.getUpcomingEvents(date, series);
+  getUpcomingEvents(@Query() q: QueryValues) {
+    return this.eventsService.getUpcomingEvents(...this.listQuery(q));
   }
-
   @Get('events/live')
-  getLiveEvents(
-    @Query('date') date?: string,
-    @Query('series') series?: string,
-  ) {
-    return this.eventsService.getLiveEvents(date, series);
+  getLiveEvents(@Query() q: QueryValues) {
+    return this.eventsService.getLiveEvents(...this.listQuery(q));
   }
-
   @Get('events/past')
-  getPastEvents(
-    @Query('date') date?: string,
-    @Query('series') series?: string,
-  ) {
-    return this.eventsService.getPastEvents(date, series);
+  getPastEvents(@Query() q: QueryValues) {
+    return this.eventsService.getPastEvents(...this.listQuery(q));
   }
-
   @Get('events/:id')
-  getEventById(
-    @Param('id') id: string,
-    @Query('series') series?: string,
-  ) {
-    return this.eventsService.getEventById(id, series);
+  getEventById(@Param('id') id: string, @Query() q: QueryValues) {
+    validateKeys(q, ['series']);
+    return this.eventsService.getEventById(id, textParam(q, 'series'));
   }
-
   @Get('sessions/:id/detail')
-  getSessionDetail(
-    @Param('id') id: string,
-    @Query('series') series?: string,
-  ) {
-    return this.eventsService.getSessionDetailById(id, series);
+  getSessionDetail(@Param('id') id: string, @Query() q: QueryValues) {
+    validateKeys(q, ['series']);
+    return this.eventsService.getSessionDetailById(id, textParam(q, 'series'));
   }
 }

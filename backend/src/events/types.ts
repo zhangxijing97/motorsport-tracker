@@ -1,4 +1,9 @@
-export type SessionStatus = 'upcoming' | 'live' | 'finished' | 'cancelled';
+export type SessionStatus =
+  | 'upcoming'
+  | 'live'
+  | 'finished'
+  | 'cancelled'
+  | 'unknown';
 
 export type SessionCategory =
   | 'practice'
@@ -31,7 +36,8 @@ export interface Session {
   name: string;
   category: SessionCategory;
   startTime: string;
-  endTime: string;
+  endTime: string | null;
+  statusBasis?: 'clock' | 'provider' | 'unknown';
   status: SessionStatus;
 }
 
@@ -51,17 +57,21 @@ export interface Event {
 }
 
 export interface SessionClassificationRow {
-  position: number;
-  driverNumber: number;
+  position: number | null;
+  displayOrder?: number;
+  classificationStatus?: string;
+  driverNumber: number | null;
   driverName: string;
   teamName: string;
   headshotUrl?: string | null;
   bestLapTime?: string | null;
   gapToLeader?: string | null;
-  laps: number;
+  laps: number | null;
 }
 
 export interface SessionDetail {
+  availability?: string;
+  publicationStatus?: string | null;
   event: {
     id: string;
     eventName: string;

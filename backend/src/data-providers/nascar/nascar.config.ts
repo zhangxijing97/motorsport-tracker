@@ -1,7 +1,4 @@
-export type NascarSeriesId =
-  | 'nascar-cup'
-  | 'nascar-xfinity'
-  | 'nascar-truck';
+export type NascarSeriesId = 'nascar-cup' | 'nascar-xfinity' | 'nascar-truck';
 
 export const NASCAR_SERIES_CONFIG: Record<
   NascarSeriesId,

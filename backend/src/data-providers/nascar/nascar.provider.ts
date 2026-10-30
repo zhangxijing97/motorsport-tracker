@@ -95,7 +95,7 @@ export class NascarProvider implements RacingDataProvider {
       .filter((event) => event.sessions.length > 0);
   }
 
-  async getEventById(request: ProviderDetailRequest): Promise<Event> {
+  getEventById(request: ProviderDetailRequest): Promise<Event> {
     const seriesId = this.toNascarSeriesId(request.seriesId);
 
     throw new NotFoundException(
@@ -103,8 +103,8 @@ export class NascarProvider implements RacingDataProvider {
     );
   }
 
-  async getSessionDetailById(): Promise<SessionDetail | null> {
-    return null;
+  getSessionDetailById(): Promise<SessionDetail | null> {
+    return Promise.resolve(null);
   }
 
   getDisplayName(seriesId: NascarSeriesId) {

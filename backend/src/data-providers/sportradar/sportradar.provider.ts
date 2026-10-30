@@ -89,11 +89,10 @@ export class SportradarProvider implements RacingDataProvider {
       return [];
     }
 
-    const summary =
-      await this.sportradarClient.get<SportradarSummaryResponse>(
-        seriesId,
-        `/en/sport_events/${season.id}/summary.json`,
-      );
+    const summary = await this.sportradarClient.get<SportradarSummaryResponse>(
+      seriesId,
+      `/en/sport_events/${season.id}/summary.json`,
+    );
 
     return summary.stage?.stages ?? [];
   }

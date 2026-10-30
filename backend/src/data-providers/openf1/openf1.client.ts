@@ -1,144 +1,37 @@
-import { Injectable, Logger } from '@nestjs/common';
-import axios, { AxiosInstance } from 'axios';
-import {
-  CacheEntry,
-  getCachedValue,
-  setCachedValue,
-} from '../../common/cache.util';
-import type {
-  OpenF1Driver,
-  OpenF1Lap,
-  OpenF1Meeting,
-  OpenF1Session,
-} from './openf1.types';
-
+import { Injectable } from '@nestjs/common';
+import { array, object, type RecordValue } from '../schema';
+import { UpstreamHttp, type Observation } from '../upstream-http';
 @Injectable()
 export class OpenF1Client {
-  private readonly logger = new Logger(OpenF1Client.name);
-
-  private readonly http: AxiosInstance = axios.create({
-    baseURL: 'https://api.openf1.org/v1',
-    timeout: 8000,
+  readonly transport = new UpstreamHttp('openf1', 'https://api.openf1.org/v1', {
+    intervalMs: 60_000,
+    count: 28,
+    spacingMs: 350,
   });
-
-  private readonly cacheTtlMs = 60_000;
-
-  private readonly meetingsCache = new Map<number, CacheEntry<OpenF1Meeting[]>>();
-  private readonly sessionsByMeetingCache = new Map<
-    number,
-    CacheEntry<OpenF1Session[]>
-  >();
-  private readonly sessionsBySessionKeyCache = new Map<
-    number,
-    CacheEntry<OpenF1Session[]>
-  >();
-
-  private async sleep(ms: number) {
-    await new Promise((resolve) => setTimeout(resolve, ms));
+  async rows(
+    path: string,
+    params: Record<string, string | number>,
+    ttl = 900_000,
+  ): Promise<Observation<RecordValue[]>> {
+    const response = await this.transport.get(path, params, ttl);
+    return { ...response, value: array(response.value).map(object) };
   }
-
-  private async requestWithRetry<T>(
-    url: string,
-    params: Record<string, unknown>,
-    retries = 2,
-  ): Promise<T> {
-    let lastError: unknown;
-
-    for (let attempt = 0; attempt <= retries; attempt++) {
-      try {
-        const response = await this.http.get<T>(url, { params });
-        return response.data;
-      } catch (error) {
-        lastError = error;
-
-        const status = axios.isAxiosError(error)
-          ? error.response?.status
-          : undefined;
-
-        const retryable = !status || status >= 500 || status === 429;
-
-        this.logger.warn(
-          `OpenF1 request failed: ${url} attempt=${attempt + 1} status=${
-            status ?? 'unknown'
-          } retryable=${retryable}`,
-        );
-
-        if (!retryable || attempt === retries) break;
-
-        await this.sleep(500 * (attempt + 1));
-      }
-    }
-
-    throw lastError;
+  sessions(year: number) {
+    return this.rows('/sessions', { year });
   }
-
-  async fetchMeetings(year: number): Promise<OpenF1Meeting[]> {
-    const cached = getCachedValue(this.meetingsCache, year);
-    if (cached) return cached;
-
-    const data = await this.requestWithRetry<OpenF1Meeting[]>(
-      '/meetings',
-      { year },
-      2,
-    );
-
-    setCachedValue(this.meetingsCache, year, data, this.cacheTtlMs);
-    return data;
+  session(key: number) {
+    return this.rows('/sessions', { session_key: key });
   }
-
-  async fetchSessionsByMeetingKey(
-    meetingKey: number,
-  ): Promise<OpenF1Session[]> {
-    const cached = getCachedValue(this.sessionsByMeetingCache, meetingKey);
-    if (cached) return cached;
-
-    const data = await this.requestWithRetry<OpenF1Session[]>(
-      '/sessions',
-      { meeting_key: meetingKey },
-      2,
-    );
-
-    setCachedValue(this.sessionsByMeetingCache, meetingKey, data, this.cacheTtlMs);
-    return data;
+  meetingSessions(key: number) {
+    return this.rows('/sessions', { meeting_key: key });
   }
-
-  async fetchSessionsBySessionKey(
-    sessionKey: number,
-  ): Promise<OpenF1Session[]> {
-    const cached = getCachedValue(this.sessionsBySessionKeyCache, sessionKey);
-    if (cached) return cached;
-
-    const data = await this.requestWithRetry<OpenF1Session[]>(
-      '/sessions',
-      { session_key: sessionKey },
-      2,
-    );
-
-    setCachedValue(
-      this.sessionsBySessionKeyCache,
-      sessionKey,
-      data,
-      this.cacheTtlMs,
-    );
-
-    return data;
+  results(key: number) {
+    return this.rows('/session_result', { session_key: key }, 300_000);
   }
-
-  async fetchDriversBySessionKey(
-    sessionKey: number,
-  ): Promise<OpenF1Driver[]> {
-    return this.requestWithRetry<OpenF1Driver[]>(
-      '/drivers',
-      { session_key: sessionKey },
-      2,
-    );
+  drivers(key: number) {
+    return this.rows('/drivers', { session_key: key }, 3_600_000);
   }
-
-  async fetchLapsBySessionKey(sessionKey: number): Promise<OpenF1Lap[]> {
-    return this.requestWithRetry<OpenF1Lap[]>(
-      '/laps',
-      { session_key: sessionKey },
-      2,
-    );
+  raceControl(key: number) {
+    return this.rows('/race_control', { session_key: key }, 300_000);
   }
 }
