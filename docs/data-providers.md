@@ -4,89 +4,46 @@
 > **Status:** **Current** = code exists in the repository; **Pending Validation** = no final data provider has been selected.  
 > **Reviewed:** 2026-10-29 · [GitHub repository](https://github.com/zhangxijing97/opengp)
 
-## Table of Contents
+## 1. Racing Series & Providers
 
-1. [Overview](#1-overview)
-2. [Current Provider Code](#2-current-provider-code)
-3. [How Data Providers Work](#3-how-data-providers-work)
-4. [Provider Selection](#4-provider-selection-pending-validation)
-5. [How to Update This Document](#5-how-to-update-this-document)
+| Racing series | Providers |
+| --- | --- |
+| **Formula 1 (F1)** | **Jolpica-F1** (primary) + **OpenF1** (supplementary); F1DB (optional historical archive) |
+| Formula 2 (F2) | — |
+| Formula E | — |
+| IndyCar | — |
+| Indy NXT | — |
+| NASCAR Cup Series | — |
+| NASCAR O'Reilly Auto Parts Series | — |
+| MotoGP | — |
+| Moto2 | — |
+| WorldSBK | — |
+| FIA World Endurance Championship (WEC) | — |
+| IMSA | — |
+| World Rally Championship (WRC) | — |
+| Super GT | — |
+| GT World Challenge Europe | — |
+| GT World Challenge America | — |
+| GT World Challenge Asia | — |
+| GT World Challenge Australia | — |
 
-## 1. Overview
+**— = Provider not yet selected.** The F1 entries are **selected integration targets**, not a claim that all adapters are implemented or tested. Existing code for other series does not establish a final provider choice.
 
-OpenGP gets motorsport data from external APIs. **Data providers** are the adapters that fetch this data and convert it into OpenGP's format.
+## 2. F1 Providers at a Glance
 
-**Important:** A provider in our code is not necessarily the original data source. For example, the current `NascarProvider` obtains its data through Sportradar.
+| Provider | Main responsibility |
+| --- | --- |
+| **Jolpica-F1** · Primary | GP calendars, Race / Qualifying / Sprint results, drivers, teams, standings, basic race lap times |
+| **OpenF1** · Supplementary | Practice / Sprint Qualifying results, Session details and cancellations, Race Control, detailed timing |
+| **F1DB** · Optional archive | Older and unusual historical records, cross-checking; **downloadable database, not a live API** |
 
-The frontend should use **OpenGP's API**, not external provider APIs directly. This allows us to change data sources without redesigning the frontend.
+**F1 technical details:** [Endpoints, response fields, mapping rules, limitations and verified samples → `f1-data-providers.md`](./f1-data-providers.md).
 
-## 2. Current Provider Code
+## 3. Integration Principles
 
-The repository already contains these adapters, but **none is confirmed as a final provider choice**.
+- **One public contract:** The Frontend consumes the [OpenGP API](./api-contract.md), not supplier-specific JSON.
+- **Source by capability:** Calendar, Session, Results and Standings may use different providers, even within one series.
+- **Keep data trustworthy:** Preserve external IDs and provenance; do not derive official finishing positions from lap times or confuse missing data with upstream errors.
+- **Track progress accurately:** **Selected**, **implemented** and **verified** are different states.
 
-| Adapter | Series IDs in the current code | External source currently used |
-| --- | --- | --- |
-| `OpenF1Provider` | `f1` | OpenF1 |
-| `SportradarProvider` | `formula-e`, `indycar`, `indy-nxt`, `motogp`, `rally` | Sportradar |
-| `NascarProvider` | `nascar-cup`, `nascar-xfinity`, `nascar-truck` | Sportradar NASCAR API |
-
-**These are code integrations, not validated coverage.** Their API access, completeness, correctness, and reliability still need testing. Other providers may replace or supplement them.
-
-**Where to find the code:** `backend/src/data-providers/`
-
-## 3. How Data Providers Work
-
-```text
-EventsService
-    ↓
-RacingDataProviderRegistry    Finds a provider for the requested series
-    ↓
-RacingDataProvider            Coordinates the work
-    ↓
-Client                         Requests data from an external API
-    ↓
-Mapper                         Converts the response into OpenGP types
-    ↓
-OpenGP API → Frontend
-```
-
-- **Registry:** Chooses which adapter to call.
-- **Provider:** Uses its Client and Mapper to fulfill a data request.
-- **Client:** Communicates with the external API.
-- **Mapper:** Converts external fields into OpenGP's common format.
-
-**Current limitations:**
-
-- The Registry selects the **first adapter matching a series**, not the best provider for each type of data.
-- Some upstream API failures are returned as empty lists, making errors hard to distinguish from “no events.”
-- Some result mappings need correction; **fastest-lap order is not official race classification**.
-
-## 4. Provider Selection (Pending Validation)
-
-**No provider or provider combination has been finalized.** Different capabilities may eventually use different sources, even within the same series.
-
-| Capability | What OpenGP needs | Selected source |
-| --- | --- | --- |
-| **Calendar** | Event dates, locations, and schedules | Pending |
-| **Sessions** | Practice, qualifying, race, and other session details | Pending |
-| **Results** | Accurate official classifications and finishing statuses | Pending |
-| **Standings** | Championship points and rankings | Pending |
-| **Live data** | Current session status and timing, where available | Pending |
-
-Before selecting a source, verify **data correctness, series and season coverage, access and usage limits, update frequency, and reliability**. Prefer useful, sustainable free access where practical; do not assume an API is free or unrestricted without checking.
-
-## 5. How to Update This Document
-
-When a source has been validated, add its details here:
-
-1. **Series and capability:** What data it supplies.
-2. **Source and access:** Provider name, API endpoint, authentication, and limits.
-3. **Mapping:** How its fields map to OpenGP entities and API responses.
-4. **Evidence and limitations:** What was tested, when, and what is still missing.
-5. **Decision:** **Candidate**, **Validated**, or **Selected**. A validated source is not automatically the selected source.
-
-Keep unconfirmed options labeled as candidates. Update this document as provider choices become clear; avoid duplicating API entity definitions here.
-
----
-
-**Related docs:** [Architecture](./architecture.md) · [API Contract](./api-contract.md)
+**Implementation:** [`backend/src/data-providers/`](../backend/src/data-providers/) · **System architecture:** [`architecture.md`](./architecture.md)
