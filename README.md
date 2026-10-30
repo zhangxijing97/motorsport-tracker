@@ -39,7 +39,7 @@ The frontend calls the OpenGP backend; the backend retrieves and normalizes data
 Clone the repository:
 
 ```bash
-git clone https://github.com/zhangxijing97/opengp
+git clone git@github.com:zhangxijing97/opengp.git
 cd opengp
 ```
 
