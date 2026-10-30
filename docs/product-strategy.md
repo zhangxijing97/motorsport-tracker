@@ -78,13 +78,30 @@ The current data-provider research covers **18 racing series**, including F1, F2
 
 These are **working user hypotheses**. Do not describe them as validated segments or assume a particular feature is necessary without further evidence. None of these audiences is restricted to the Bay Area.
 
-## 5. Future Opportunities (Proposed)
+## 5. Competitive User Feedback & Value Signals (Exploratory)
+
+**Evidence status:** The observations below come from a small, non-representative sample of publicly visible app-store reviews and motorsport forum discussions, reviewed on **2026-10-29**. They are **user feedback signals**, not validated market size, demand rankings, representative research, or evidence that OpenGP has already solved these problems. Product coverage figures are competitors' own claims and have not been independently audited.
+
+| User feedback signal | Public evidence | Product implication for OpenGP (Proposed) |
+| --- | --- | --- |
+| **One reliable multi-series view saves effort.** Fans describe checking multiple championship calendars and sites as tedious; they value seeing the whole weekend in one place. | [IMSA fans discussing schedule apps (2024)](https://www.reddit.com/r/IMSARacing/comments/1bf3sj2/best_app_to_view_mostall_motorsports_schedules/) · [The Racing Line user reviews](https://apps.apple.com/us/app/theracingline-racing-live-tv/id1544668453?platform=iphone&see-all=reviews) | Optimize the basic workflow of finding the next relevant sessions across series. Measure task completion and accuracy before adding depth. |
+| **Exact, usable timing matters more than a date alone.** Fans ask for individual race/session start times, local-time conversion, and convenient calendar access; some also appreciate clear viewing links. | [Supercars calendar discussion (2025)](https://www.reddit.com/r/v8supercars/comments/1je0pfy) · [FullGrid user reviews](https://apps.apple.com/us/app/fullgrid-motorsports/id6778998230) · [The Racing Line feature-request review](https://apps.apple.com/us/app/theracingline-racing-live-tv/id1544668453?platform=iphone&see-all=reviews) | Treat local time, session-level clarity, and source transparency as core experience concerns; calendar integration and where-to-watch remain scope decisions. |
+| **Trust is damaged by missed alerts and unreliable presentation.** Individual reviews mention notifications that require periodic app reopening and occasionally slow or inconsistent time display. | [The Racing Line reviews, including a 2025 notification complaint](https://apps.apple.com/us/app/theracingline-racing-live-tv/id1544668453?platform=iphone&see-all=reviews) | Prioritize correct session states, refresh/error clarity, and dependable information. If reminders are eventually offered, notification reliability must be verified rather than assumed. |
+| **Preferences should be useful without creating fragile setup.** A forum user reported losing followed-series settings after clearing browser data; other users value selecting series and session types. | [Discussion of raceday.watch browser-stored preferences (2026)](https://www.reddit.com/r/IMSARacing/comments/1v87cqz/i_kept_missing_sessions_because_of_timezone_math/) · [The Racing Line user reviews](https://apps.apple.com/us/app/theracingline-racing-live-tv/id1544668453?platform=iphone&see-all=reviews) | If Following or favorites are introduced, test how users expect preferences to persist. This does not itself approve an account system or a cross-device sync requirement. |
+| **Discovery has appeal, but is not an uncontested differentiator.** Some users praise finding new championships through existing trackers; existing competitors already promote broad coverage and discovery-related features. | [The Racing Line user reviews](https://apps.apple.com/us/app/theracingline-racing-live-tv/id1544668453) · [FullGrid's feature description](https://www.fullgridmotorsports.com/about) | Explore *how* OpenGP could recommend a relevant new race with a useful reason to watch, rather than treating “multi-series” or “discovery” alone as unique. |
+| **Access and pricing create friction, but free access alone is not a moat.** Some reviews object to paying for basic race times; at least one competing multi-series tracker is already offered free. | [The Racing Line Google Play reviews](https://play.google.com/store/apps/details?id=com.daveellis.theracingline) · [FullGrid product information](https://www.fullgridmotorsports.com/about) | Keep core-user-value and pricing assumptions separate. Do not claim that a free schedule would, by itself, differentiate OpenGP. |
+
+**Competitive constraint:** The Racing Line and FullGrid already advertise extensive multi-series calendars, local-time schedules, reminders, and watch information. Therefore, **aggregating more racing series is not yet a defensible product differentiator**. OpenGP must first deliver a credible basic experience, then validate whether clearer UX, more useful cross-series discovery, or eventual connections to real-world automotive activities lead to distinct user value.
+
+**Unverified opportunities:** These reviews do **not** establish demand for local automotive events, Event Creation, ticketing, an AI recommendation system, or a WATCH → GO → DO conversion journey. Those need separate research and testing. No reviewed comments should be treated as a request from OpenGP's own users.
+
+## 6. Future Opportunities (Proposed)
 
 Possible future areas include personalized following, saved events, notifications, news, community discussion, automotive event listings, and driving experiences.
 
 Specific Bay Area pilot event types, sourcing methods, maps, event creation, booking, and payment workflows remain **unapproved**. They should not be treated as current MVP requirements. Starting event-content validation in the Bay Area does not imply that future event discovery or OpenGP's users are confined there.
 
-## 6. Open Decisions
+## 7. Open Decisions
 
 | Question | Needed before commitment |
 | --- | --- |
@@ -95,7 +112,7 @@ Specific Bay Area pilot event types, sourcing methods, maps, event creation, boo
 | How and when should local event discovery expand geographically? | Evidence from the initial content pilot, operational capacity, and user demand in other regions. |
 | When should personalization or community be added? | Evidence of user value relative to cost and complexity. |
 
-## 7. Ownership and Related Documents
+## 8. Ownership and Related Documents
 
 **D00 · Product & Strategy** maintains this strategy. The **Founder** has final decision-making authority. **D01 · Engineering** uses approved requirements to plan and implement software.
 
