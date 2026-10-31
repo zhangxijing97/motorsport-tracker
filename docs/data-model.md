@@ -1,77 +1,103 @@
-# OpenGP — Canonical Data Model v1
+# OpenGP — Canonical Data Model v2 (Discussion Draft)
 
-> **Status:** Proposed for engineering review, not yet implemented. **Scope:** multi-series model, F1-first implementation. **Updated:** 2026-10-30.
->
-> **Authority:** This document defines the internal meaning and relationships of racing entities. HTTP routes and JSON responses are specified in [`api-contract.md`](./api-contract.md); supplier mappings in [`f1-data-providers.md`](./f1-data-providers.md). A canonical model does **not** require a database.
+> **Status:** Proposed for Founder review; not approved or implemented. This is a logical model, not a database schema or API contract. Based on the existing `docs/data-model.md` v1 and discussions through 2026-10-30. No changes made to GitHub.
 
 ## 1. Model at a glance
 
 ```mermaid
 erDiagram
   SERIES ||--o{ SEASON : has
-  SEASON ||--o{ EVENT : schedules
-  EVENT ||--o{ SESSION : contains
-  SESSION ||--o{ ENTRY : accepts
-  ENTRY ||--o{ ENTRY_PARTICIPANT : includes
-  PARTICIPANT ||--o{ ENTRY_PARTICIPANT : joins
-  TEAM o|--o{ ENTRY : represents
-  SESSION ||--o{ RESULT_SET : publishes
+  SEASON ||--o{ ROUND : schedules
+  VENUE o|--o{ ROUND : hosts
+  ROUND ||--o{ SESSION : contains
+
+  SEASON ||--o{ TEAM_DRIVER : has
+  DRIVER ||--o{ TEAM_DRIVER : joins
+  TEAM ||--o{ TEAM_DRIVER : employs
+
+  ROUND ||--o{ ROUND_ENTRY : accepts
+  TEAM o|--o{ ROUND_ENTRY : represents
+  MANUFACTURER o|--o{ ROUND_ENTRY : supplies
+  COMPETITION_CLASS o|--o{ ROUND_ENTRY : categorizes
+  ROUND_ENTRY ||--o{ ROUND_ENTRY_DRIVER : has
+  DRIVER ||--o{ ROUND_ENTRY_DRIVER : participates
+  TEAM_DRIVER o|--o{ ROUND_ENTRY_DRIVER : affiliation_if_known
+  ROUND_ENTRY ||--o{ SESSION_ENTRY : enters
+  SESSION ||--o{ SESSION_ENTRY : accepts
+
+  ROUND o|--o{ RESULT_SET : round_results
+  SESSION o|--o{ RESULT_SET : session_results
   RESULT_SET ||--o{ CLASSIFICATION_ROW : contains
-  ENTRY ||--o{ CLASSIFICATION_ROW : classified_as
-  SEASON ||--o{ STANDINGS_SNAPSHOT : has
-  STANDINGS_SNAPSHOT ||--o{ STANDING_ROW : ranks
-  PARTICIPANT o|--o{ STANDING_ROW : ranked_person
+  ROUND_ENTRY ||--o{ CLASSIFICATION_ROW : classified_as
+
+  SEASON ||--o{ CHAMPIONSHIP : awards
+  COMPETITION_CLASS o|--o{ CHAMPIONSHIP : limits
+  CHAMPIONSHIP ||--o{ STANDINGS : publishes
+  STANDINGS ||--o{ STANDING_ROW : contains
+  DRIVER o|--o{ STANDING_ROW : ranked_driver
   TEAM o|--o{ STANDING_ROW : ranked_team
-  PARTICIPANT ||--o{ EXTERNAL_IDENTITY : mapped_by
+  MANUFACTURER o|--o{ STANDING_ROW : ranked_manufacturer
+
+  DRIVER ||--o{ EXTERNAL_IDENTITY : mapped_by
   TEAM ||--o{ EXTERNAL_IDENTITY : mapped_by
-  EVENT ||--o{ EXTERNAL_IDENTITY : mapped_by
+  ROUND ||--o{ EXTERNAL_IDENTITY : mapped_by
   SESSION ||--o{ EXTERNAL_IDENTITY : mapped_by
 ```
+
+**Reading rules:**
+- `Round` is one trackable competition unit within a season; `roundNumber` is optional. One weekend can contain multiple Rounds (e.g. doubleheader). `Session` is a practice, qualifying, race, stage, etc.
+- `RoundEntry` is an entrant/car/competition unit **at Round level**; `RoundEntryDriver` is its driver/rider/co-driver roster. `TeamDriver` is a driver–team–season affiliation, which can be unknown and is not a prerequisite for joining a RoundEntry.
+- `SessionEntry` says which RoundEntry participates in which Session. Actual drivers in an individual Session can differ from the Round roster; represent `actualDriverIds?` when supported, or add a SessionEntry–Driver relation if finer granularity becomes necessary.
+- A `ResultSet` belongs to **exactly one** of `Round` or `Session` (`roundId XOR sessionId`); both optional-looking ERD edges reflect polymorphic ownership, not permission to leave both blank or populate both.
+- `ClassificationRow` refers to a `RoundEntry`, whether the result is Round-level or Session-level. It is separate from participation and can be revised.
+- A `StandingRow` identifies **exactly one** ranking subject (`driver`, `team`, `manufacturer`; more types can be added), rather than all three.
+- `ExternalIdentity` is a polymorphic crosswalk; ERD shows representative entity types, not its complete set. Provider keys must be scoped and safely verified. `Manufacturer` is a logical identity to support where known; a separate database table is not mandatory now.
+- `Provenance` is modeled as metadata attached to source-backed data, not necessarily a standalone entity/table.
 
 ## 2. Entities and semantics
 
 | Entity | Identity and essential fields | Meaning |
 | --- | --- | --- |
-| `Series` | `id`, `name`, `category` | Championship/competition (e.g. F1, WEC); not provider ID |
-| `Season` | `id`, `seriesId`, `year`, `name` | Belongs to one series; `year` is nullable for non-calendar-year seasons |
-| `Event` | `id`, `seasonId`, `name`, `roundNumber?`, `venue?`, `startsAt?`, `endsAt?` | Weekend/round; not a session |
-| `Session` | `id`, `eventId`, `type`, `name`, `scheduledStartAt?`, `scheduledEndAt?`, `actualEndAt?`, `lifecycle` | Practice/qualifying/sprint/race; independent timing and cancellation state |
-| `Participant` | `id`, `displayName`, `kind`, `birthDate?`, `nationality?` | Person (driver/rider); global identity shared across series |
-| `Team` | `id`, `name` | Organization; team branding/name can change by season |
-| `Entry` | `id`, `sessionId`, `number?`, `teamId?` | One competing entry in a particular session; a car may involve multiple people |
-| `EntryParticipant` | `entryId`, `participantId`, `role?` | Many-to-many; protects WEC/IMSA shared-car semantics |
-| `ResultSet` | `id`, `sessionId`, `kind`, `publicationStatus`, `publishedAt?`, `revision?` | Published snapshot; separate from session lifecycle |
-| `ClassificationRow` | `resultSetId`, `entryId`, `position?`, `positionText?`, `classificationStatus`, `laps?`, `points?`, `elapsedMs?`, `gapMs?`, `bestLapMs?` | Classification; position and status independent |
-| `StandingsSnapshot` | `id`, `seasonId`, `type`, `asOfEventId?`, `asOfSessionId?`, `publicationStatus`, `retrievedAt` | Published drivers/teams points as-of a point in the season |
-| `StandingRow` | `snapshotId`, `participantId?`, `teamId?`, `rank?`, `points`, `wins?` | Exactly one competitor reference; can reflect adjustments |
-| `ExternalIdentity` | `entityType`, `canonicalId`, `provider`, `externalId`, `scope?`, `verifiedBy?` | Alias/crosswalk across Jolpica, OpenF1 and later providers |
-| `Provenance` | `provider`, `sourceEndpoint?`, `retrievedAt`, `coverage?` | Source of a value or aggregate; can be attached to a result or response |
+| `Series` | `id`, `name`, `category?` | A racing series, e.g. F1, WEC, MotoGP; independent of Provider IDs. |
+| `Season` | `id`, `seriesId`, `name`, `year?`, `startYear?`, `endYear?` | A season under a Series, including cross-year seasons such as 2025/26. |
+| `Round` | `id`, `seasonId`, `name`, `roundNumber?`, `venueId?`, `startsAt?`, `endsAt?`, `status?` | A trackable competition unit, e.g. Chinese GP, Rally Monte-Carlo or one Formula E doubleheader race. No mandatory official round number. |
+| `Session` | `id`, `roundId`, `type`, `name`, `scheduledStartAt?`, `scheduledEndAt?`, `actualEndAt?`, `lifecycle` | Practice, Qualifying, Sprint, Race, Special Stage, etc.; session timing/status is separate from result publication. |
+| `Venue` | `id`, `name`, `type?`, `locality?`, `country?`, `latitude?`, `longitude?`, `timezone?` | Where the Round takes place (circuit or other venue/area). More detailed stage/course locations can be added later. |
+| `Driver` | `id`, `displayName`, `nationality?`, `birthDate?` | A real person participating as driver, rider or co-driver; role depends on their participation, not a permanent person type. |
+| `Team` | `id`, `name`, `country?` | A racing team or entrant organization; not necessarily the manufacturer. |
+| `TeamDriver` | `id`, `seasonId`, `teamId`, `driverId`, `role?` | A Driver’s relationship with a Team in a Season; does not imply attendance at every Round. |
+| `CompetitionClass` | `id`, `seriesId?`, `seasonId?`, `name`, `code?` | A competing class, e.g. WEC Hypercar / LMGT3; class applicability may vary by season. |
+| `Manufacturer` | `id`, `name` | Manufacturer/constructor identity, e.g. Ducati vs a specific MotoGP team. Logical support now; persistence may be deferred. |
+| `RoundEntry` | `id`, `roundId`, `number?`, `teamId?`, `manufacturerId?`, `competitionClassId?` | One entered vehicle/crew/competition unit at a Round, e.g. one WEC car with three drivers. |
+| `RoundEntryDriver` | `roundEntryId`, `driverId`, `role?`, `teamDriverId?` | Links one RoundEntry to one or multiple Drivers; optionally records a known TeamDriver affiliation. |
+| `SessionEntry` | `id`, `sessionId`, `roundEntryId`, `participationStatus?`, `actualDriverIds?` | The RoundEntry's participation in a particular Session. The actual driver roster may differ from the Round's overall roster. |
+| `ResultSet` | `id`, `roundId?`, `sessionId?`, `kind`, `publicationStatus`, `publishedAt?`, `revision?` | One published results collection, attached to exactly one Round or Session; can represent revised results. |
+| `ClassificationRow` | `resultSetId`, `roundEntryId`, `overallPosition?`, `classPosition?`, `positionText?`, `classificationStatus`, `laps?`, `points?`, `elapsedMs?`, `gapMs?`, `bestLapMs?` | One entrant's result within a ResultSet; results, finish status, and overall/class positions are distinct. |
+| `Championship` | `id`, `seasonId`, `name`, `subjectType`, `competitionClassId?` | A distinct title contested in a Season, e.g. F1 Drivers' or MotoGP Constructors' Championship. |
+| `Standings` | `id`, `championshipId`, `asOfRoundId?`, `asOfSessionId?`, `publicationStatus`, `retrievedAt` | A provider-published standings table at a specified point in the season, not necessarily calculated by OpenGP. |
+| `StandingRow` | `standingsId`, `subjectType`, `subjectId`, `rank?`, `points`, `wins?` | One ranked Driver, Team, Manufacturer or supported future subject. Exactly one typed subject per row. |
+| `ExternalIdentity` | `entityType`, `canonicalId`, `provider`, `externalId`, `scope?`, `verifiedBy?` | Maps external Provider identities onto OpenGP identities; never merge by name or car number alone. |
+| `Provenance` *(metadata)* | `provider`, `sourceEndpoint?`, `retrievedAt`, `coverage?` | Where and when data came from; attach to results/standings/responses, not necessarily its own database table. |
 
-Fields here are semantic guidance, **not yet exact TypeScript DTOs**. A `?` marks optional/nullable values. Stable ID policy must be deterministic across refreshes; do not expose ephemeral upstream keys as canonical IDs. Keep legacy aliases for existing `openf1-session-*` URLs.
+Fields are **semantic guidance**, not finalized TypeScript DTOs. `?` means optional. Example IDs must be stable and not merely upstream temporary keys. `points` should serialize as decimal strings where exact values matter (e.g. `"12.5"`). `publicationStatus` must not be inferred as official `final` from Provider presence alone. `availability` (unpublished, unsupported, failed, etc.) must remain distinct from empty results.
 
-## 3. Required distinctions
+### Deferred Jolpica-style extension modules (not part of the core ERD)
 
-- `Entry` is not `Participant`: WEC entries may have multiple drivers; historical F1 can have shared cars.
-- A position is not a finish status: DSQ/DNF/DNS/NC may require separate status even if `position` is supplied. Preserve upstream `positionText` and `status` for interpretation; don't infer classifications from lap rankings.
-- `Session.lifecycle`: `scheduled | running | finished | cancelled | unknown`. This is **not** result publication state.
-- `ResultSet.publicationStatus`: `unknown | provisional | final`. Provider-returned results are **not proof** they are officially final.
-- `Availability`: `available | partial | not_published | unsupported | upstream_error | access_restricted | not_applicable`. Missing results are not an empty classification.
-- `points` are decimal (half-points exist); store/expose exact decimal strings when serialized, e.g. `"12.5"`.
-- All times are ISO 8601 UTC instants when known. Scheduled end is not actual end. Race time is not always gap-to-leader.
-- A season championship standings snapshot is not equivalent to summing all race rows; source standings can contain adjustments.
-- Person matching: verified common IDs or supported multi-attribute evidence; **do not merge by name or number alone**. Ambiguous matches stay separate until reviewed.
-- External identifiers need a namespace and context: provider + entity type + external ID; include season/session scope if the provider ID is not globally unique.
+| Extension | Why deferred |
+| --- | --- |
+| `BaseTeam` | Team naming/lineage history, not required for early schedule/results. |
+| `Lap`, `PitStop`, `Penalty` | Richer race details and penalties can be added by capability. |
+| `PointSystem` | Required only if OpenGP calculates/scenarios session points itself; for v1 source the official standings from Providers. |
+| `ChampionshipRules` | Required for self-calculated championship rankings across varying scoring eras/series. |
+| `ChampionshipAdjustment` | Important for historical penalties and deductions; v1 should reflect Provider standings, not silently reconstruct them. |
+| `SessionSegment` | Potential future NASCAR Stages, endurance checkpoints, or other explicit subdivisions, subject to Provider verification. |
 
-## 4. F1 source responsibilities
+## 3. Open questions before approval
 
-Jolpica is primary for seasons, rounds, schedule, race/qualifying/sprint classifications and standings. OpenF1 supplements session keys, cancellations, practice and sprint qualifying results and timing/race control. F1DB is deferred offline historical material. See [`f1-data-providers.md`](./f1-data-providers.md) for endpoints, actual fields, coverage, sample validation and precedence rules.
+1. Should `Round` mean an official round or a user-facing trackable unit when the two differ? This draft adopts the latter and keeps `roundNumber` optional.
+2. Which external identities can remain stable without persistent mapping storage? Define canonical ID policy before coding public URLs.
+3. How to represent Session-level driver substitutions using source-backed facts (optional `actualDriverIds` versus a separate normalized join).
+4. How do `CompetitionClass` values and a championship's typed ranking subjects map to each series' actual Provider fields?
+5. How to version and retain `ResultSet` revisions versus merely displaying the latest source data.
 
-## 5. Decisions to finalize before marking v1 approved
-
-1. Exact ID generation/crosswalk strategy and persistence boundary; an in-memory-only alias registry cannot guarantee global stability in every case.
-2. Whether `Entry` persists for sessions before start and whether classification snapshots are stored or reconstructed on each request.
-3. Multi-series team identity policy (same legal organization versus event-specific entrant/team name).
-4. Actual result `final` provenance and revision retention; providers do not universally certify FIA final status.
-5. Which proposed entities are required now versus deferred without losing future compatibility.
-
-**Reference:** [Database schema draft](./database-schema.dbml) is an *optional persistence design*, not an instruction to deploy a database.
+**Compatibility:** The current `docs/api-contract.md`, `database-schema.dbml`, and existing Backend TypeScript types still describe older designs. No automatic changes to those contracts are implied by this proposed Canonical Model.
